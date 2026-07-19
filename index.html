@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodTech IT Solutions - Portal</title>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <!-- ApexCharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+    <!-- ==========================================================================
+       1. LOGIN SECTION (image.png style)
+       ========================================================================== -->
+    <div id="login-view" class="login-container">
+        <!-- Left Side: Logo & Illustration -->
+        <div class="login-left">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>CODTECH</h1>
+                    <span>IT SOLUTIONS</span>
+                </div>
+            </div>
+
+            <div class="login-illustration-wrapper">
+                <div class="illustration-text">
+                    <h2>Welcome Back!</h2>
+                    <p>Sign in to continue to your account</p>
+                </div>
+                
+                <!-- Modern Laptop & Shield Vector Illustration (SVG) -->
+                <div class="illustration-svg-container">
+                    <svg viewBox="0 0 500 400" width="100%" height="100%">
+                        <!-- Glow effect -->
+                        <defs>
+                            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+                            </radialGradient>
+                            <linearGradient id="shield-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#3b82f6"/>
+                                <stop offset="100%" stop-color="#1d4ed8"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="250" cy="200" r="180" fill="url(#glow)"/>
+                        
+                        <!-- Potted Plant on Left -->
+                        <g id="plant" transform="translate(60, 180)">
+                            <!-- Pot -->
+                            <polygon points="20,80 10,120 50,120 40,80" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+                            <!-- Soil -->
+                            <ellipse cx="30" cy="80" rx="12" ry="3" fill="#78350f"/>
+                            <!-- Leaves -->
+                            <path d="M30,80 Q10,40 0,30 Q20,40 30,80" fill="#34d399"/>
+                            <path d="M30,80 Q25,20 15,10 Q35,30 30,80" fill="#10b981"/>
+                            <path d="M30,80 Q40,30 50,20 Q45,50 30,80" fill="#059669"/>
+                            <path d="M30,80 Q50,50 60,60 Q35,70 30,80" fill="#34d399"/>
+                        </g>
+
+                        <!-- Mobile Phone on Right -->
+                        <g id="phone" transform="translate(350, 240)">
+                            <rect x="0" y="0" width="60" height="110" rx="8" fill="#020617" stroke="#475569" stroke-width="3"/>
+                            <!-- Screen -->
+                            <rect x="4" y="8" width="52" height="94" rx="4" fill="#1e293b"/>
+                            <!-- Elements on phone screen -->
+                            <rect x="12" y="20" width="36" height="15" rx="3" fill="#2563eb" opacity="0.6"/>
+                            <circle cx="20" cy="48" r="4" fill="#10b981"/>
+                            <rect x="28" y="46" width="20" height="4" rx="2" fill="#64748b"/>
+                            <circle cx="20" cy="62" r="4" fill="#3b82f6"/>
+                            <rect x="28" y="60" width="20" height="4" rx="2" fill="#64748b"/>
+                            <!-- Home Bar -->
+                            <line x1="22" y1="105" x2="38" y2="105" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- Laptop in Center -->
+                        <g id="laptop" transform="translate(110, 150)">
+                            <!-- Screen back/border -->
+                            <rect x="30" y="20" width="220" height="145" rx="10" fill="#334155" stroke="#64748b" stroke-width="3"/>
+                            <!-- Active Screen -->
+                            <rect x="36" y="26" width="208" height="133" rx="6" fill="#0f172a"/>
+                            <!-- Code/Dashboard graphics on screen -->
+                            <g fill="#1e293b" opacity="0.8">
+                                <rect x="46" y="36" width="60" height="50" rx="4"/>
+                                <rect x="114" y="36" width="120" height="12" rx="3" fill="#3b82f6" opacity="0.4"/>
+                                <rect x="114" y="54" width="80" height="8" rx="2" fill="#cbd5e1" opacity="0.2"/>
+                                <rect x="114" y="66" width="100" height="8" rx="2" fill="#cbd5e1" opacity="0.2"/>
+                                <rect x="114" y="78" width="50" height="8" rx="2" fill="#cbd5e1" opacity="0.2"/>
+                                <!-- Lower charts grid -->
+                                <rect x="46" y="96" width="40" height="40" rx="3" fill="#10b981" opacity="0.2"/>
+                                <rect x="94" y="96" width="40" height="40" rx="3" fill="#f59e0b" opacity="0.2"/>
+                                <rect x="142" y="96" width="82" height="40" rx="3" fill="#3b82f6" opacity="0.2"/>
+                            </g>
+                            <!-- Laptop Base -->
+                            <path d="M0,165 L280,165 L295,185 L-15,185 Z" fill="#64748b"/>
+                            <!-- Laptop Base detail line -->
+                            <line x1="-15" y1="184" x2="295" y2="184" stroke="#475569" stroke-width="2"/>
+                            <!-- Laptop Trackpad -->
+                            <rect x="110" y="168" width="60" height="14" rx="2" fill="#475569"/>
+                            <!-- Opened status glow -->
+                            <path d="M30,165 L250,165 L230,175 L50,175 Z" fill="#3b82f6" opacity="0.1"/>
+                        </g>
+
+                        <!-- Floating Shield with Keyhole (Security Lock) -->
+                        <g id="shield" transform="translate(195, 185)">
+                            <path d="M30,0 L60,10 L60,40 C60,65 47,85 30,95 C13,85 0,65 0,40 L0,10 Z" fill="url(#shield-grad)" stroke="#60a5fa" stroke-width="2"/>
+                            <!-- Inner details -->
+                            <path d="M30,8 L52,16 L52,40 C52,58 42,75 30,83 C18,75 8,58 8,40 L8,16 Z" fill="none" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="3,3"/>
+                            <!-- Lock Shackle -->
+                            <rect x="22" y="32" width="16" height="16" rx="2" fill="#ffffff"/>
+                            <path d="M25,32 L25,28 C25,24 27,24 30,24 C33,24 35,24 35,28 L35,32" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+                            <circle cx="30" cy="40" r="2.5" fill="#1e3a8a"/>
+                            <line x1="30" y1="42.5" x2="30" y2="46.5" stroke="#1e3a8a" stroke-width="2"/>
+                        </g>
+                        
+                        <!-- Abstract floating nodes -->
+                        <circle cx="100" cy="100" r="5" fill="#3b82f6" opacity="0.6"/>
+                        <line x1="100" y1="100" x2="140" y2="176" stroke="#3b82f6" stroke-width="1" stroke-dasharray="4,4" opacity="0.4"/>
+                        <circle cx="390" cy="120" r="6" fill="#10b981" opacity="0.7"/>
+                        <line x1="390" y1="120" x2="290" y2="185" stroke="#10b981" stroke-width="1" stroke-dasharray="4,4" opacity="0.4"/>
+                        <circle cx="320" cy="70" r="4" fill="#f59e0b" opacity="0.5"/>
+                    </svg>
+                </div>
+
+                <p class="login-footer-text">&copy; 2026 CodTech IT Solutions. All rights reserved.</p>
+            </div>
+        </div>
+
+        <!-- Right Side: Login Form Card -->
+        <div class="login-right">
+            <div class="login-card">
+                <div class="login-header">
+                    <h3>Login to your account</h3>
+                    <p>Enter your credentials to access your dashboard</p>
+                </div>
+                
+                <!-- Error Alert Box -->
+                <div id="login-error" class="login-error-message hidden">
+                    <i data-lucide="alert-circle" style="width:16px;height:16px;"></i>
+                    <span id="login-error-txt">Invalid username or password.</span>
+                </div>
+
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <div class="input-with-icon">
+                            <input type="text" id="username" placeholder="Enter your username" required autocomplete="username">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-with-icon">
+                            <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+                            <button type="button" id="toggle-password-btn" class="password-toggle">
+                                <i data-lucide="eye" style="width:18px;height:18px;"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <label class="remember-me">
+                            <input type="checkbox" id="remember-me-chk">
+                            Remember me
+                        </label>
+                        <a href="#" class="forgot-password" onclick="alert('Please contact your administrator to reset your password.')">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-login">Sign In</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==========================================================================
+       2. ADMIN DASHBOARD SECTION (image copy.png style)
+       ========================================================================== -->
+    <div id="admin-view" class="dashboard-wrapper hidden">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar admin-theme">
+            <div class="sidebar-header">
+                <div class="logo-area">
+                    <div class="logo-icon" style="width:36px;height:36px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <h1 style="font-size:1rem;">CODTECH</h1>
+                        <span style="font-size:0.6rem;">IT SOLUTIONS</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <a href="#" class="sidebar-link active" data-target="admin-dashboard-panel">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <div class="menu-group-title">Project Management</div>
+                <a href="#" class="sidebar-link" data-target="admin-projects-panel" id="admin-sidebar-projects-link">
+                    <i data-lucide="folder-kanban"></i>
+                    <span>Projects</span>
+                </a>
+                <a href="#" class="sidebar-link" onclick="openAddProjectModal()">
+                    <i data-lucide="plus-circle"></i>
+                    <span>Add Project</span>
+                </a>
+                <a href="#" class="sidebar-link" data-target="admin-projects-panel" onclick="filterAdminProjectsTable('all')">
+                    <i data-lucide="list"></i>
+                    <span>Project List</span>
+                </a>
+                <a href="#" class="sidebar-link" data-target="admin-projects-panel" onclick="filterAdminProjectsTable('Completed')">
+                    <i data-lucide="check-circle-2"></i>
+                    <span>Completed Projects</span>
+                </a>
+
+                <div class="menu-group-title">Employee Management</div>
+                <a href="#" class="sidebar-link" data-target="admin-employees-panel">
+                    <i data-lucide="users"></i>
+                    <span>Employees</span>
+                </a>
+                <a href="#" class="sidebar-link" onclick="openAssignProjectModal()">
+                    <i data-lucide="user-check"></i>
+                    <span>Assign Projects</span>
+                </a>
+
+                <div class="menu-group-title">Reports & Finance</div>
+                <a href="#" class="sidebar-link" onclick="alert('Payments report is under development.')">
+                    <i data-lucide="indian-rupee"></i>
+                    <span>Payments</span>
+                </a>
+                <a href="#" class="sidebar-link" onclick="alert('Reports section is under development.')">
+                    <i data-lucide="bar-chart-3"></i>
+                    <span>Reports</span>
+                </a>
+
+                <div class="menu-group-title">Settings</div>
+                <a href="#" class="sidebar-link" onclick="alert('Admin Profile details editing is under development.')">
+                    <i data-lucide="user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="#" class="sidebar-link" onclick="alert('Settings view is under development.')">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                </a>
+                
+                <a href="#" class="sidebar-link" style="margin-top: 2rem; color: #f87171;" id="admin-logout-btn">
+                    <i data-lucide="log-out"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Body Panel -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="toggle-sidebar-btn" id="admin-toggle-sidebar-btn">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <h2 class="page-title" id="admin-panel-title">Dashboard</h2>
+                </div>
+                <div class="header-right">
+                    <div class="notification-badge-wrapper" onclick="alert('No new notifications for Admin')">
+                        <button class="notification-btn">
+                            <i data-lucide="bell"></i>
+                        </button>
+                        <span class="notification-badge admin-theme-badge">5</span>
+                    </div>
+                    <div class="user-profile-badge">
+                        <div class="avatar-circle admin">A</div>
+                        <div class="profile-info">
+                            <span class="profile-name">Admin</span>
+                            <span class="profile-role">Administrator</span>
+                        </div>
+                        <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--text-muted);"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content Container -->
+            <div class="content-body">
+                
+                <!-- ================= PANEL 1: ADMIN MAIN DASHBOARD OVERVIEW ================= -->
+                <div id="admin-dashboard-panel" class="admin-panel-section">
+                    <!-- Row 1: 5 KPI Cards -->
+                    <div class="kpi-grid admin-cols">
+                        <!-- Total Projects -->
+                        <div class="kpi-card">
+                            <div class="kpi-details">
+                                <span class="kpi-label">Total Projects</span>
+                                <span class="kpi-value" id="kpi-admin-total-proj">24</span>
+                                <span class="kpi-subtext">All Time</span>
+                            </div>
+                            <div class="kpi-icon-container" style="background-color: #eff6ff; color: #2563eb;">
+                                <i data-lucide="folder"></i>
+                            </div>
+                        </div>
+                        <!-- Ongoing Projects -->
+                        <div class="kpi-card">
+                            <div class="kpi-details">
+                                <span class="kpi-label">Ongoing Projects</span>
+                                <span class="kpi-value" id="kpi-admin-ongoing-proj">8</span>
+                                <span class="kpi-subtext">In Progress</span>
+                            </div>
+                            <div class="kpi-icon-container" style="background-color: #f0fdf4; color: #16a34a;">
+                                <i data-lucide="play-circle"></i>
+                            </div>
+                        </div>
+                        <!-- Completed Projects -->
+                        <div class="kpi-card">
+                            <div class="kpi-details">
+                                <span class="kpi-label">Completed Projects</span>
+                                <span class="kpi-value" id="kpi-admin-completed-proj">12</span>
+                                <span class="kpi-subtext">Completed</span>
+                            </div>
+                            <div class="kpi-icon-container" style="background-color: #fffbeb; color: #ea580c;">
+                                <i data-lucide="hourglass"></i>
+                            </div>
+                        </div>
+                        <!-- Employees -->
+                        <div class="kpi-card">
+                            <div class="kpi-details">
+                                <span class="kpi-label">Employees</span>
+                                <span class="kpi-value" id="kpi-admin-total-emp">6</span>
+                                <span class="kpi-subtext">Total Employees</span>
+                            </div>
+                            <div class="kpi-icon-container" style="background-color: #f5f3ff; color: #7c3aed;">
+                                <i data-lucide="users"></i>
+                            </div>
+                        </div>
+                        <!-- Total Payment Earned -->
+                        <div class="kpi-card">
+                            <div class="kpi-details">
+                                <span class="kpi-label">Total Payment Earned</span>
+                                <span class="kpi-value" id="kpi-admin-total-earned">₹ 12,45,000</span>
+                                <span class="kpi-subtext">All Time Earnings</span>
+                            </div>
+                            <div class="kpi-icon-container" style="background-color: #ecfeff; color: #0891b2;">
+                                <i data-lucide="indian-rupee"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Charts & Recent Projects -->
+                    <div class="dashboard-row-grid-3">
+                        <!-- Project Overview Chart (Donut) -->
+                        <div class="card-widget">
+                            <div class="card-widget-header">
+                                <span class="card-widget-title">Project Overview</span>
+                            </div>
+                            <div class="card-widget-body">
+                                <div id="admin-project-donut-chart" class="chart-container-donut"></div>
+                            </div>
+                        </div>
+                        <!-- Payment Overview Chart (Line) -->
+                        <div class="card-widget">
+                            <div class="card-widget-header">
+                                <div>
+                                    <span class="card-widget-title">Payment Overview</span>
+                                    <div class="card-widget-subtitle">Total Earned: <strong id="admin-line-chart-total-earned" style="color:var(--text-dark);">₹ 12,45,000</strong></div>
+                                </div>
+                            </div>
+                            <div class="card-widget-body">
+                                <div id="admin-payment-line-chart" class="chart-container-line"></div>
+                            </div>
+                        </div>
+                        <!-- Recent Projects list -->
+                        <div class="card-widget">
+                            <div class="card-widget-header">
+                                <span class="card-widget-title">Recent Projects</span>
+                            </div>
+                            <div class="card-widget-body">
+                                <div class="recent-project-list" id="admin-recent-projects-list">
+                                    <!-- Dynamic rows seeded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Projects Table & Employee Summary -->
+                    <div class="dashboard-row-grid-2">
+                        <!-- Projects Table Widget -->
+                        <div class="card-widget">
+                            <div class="card-widget-header">
+                                <span class="card-widget-title">Projects</span>
+                                <button class="btn-primary admin-btn" onclick="openAddProjectModal()">
+                                    <i data-lucide="plus" style="width:14px;height:14px;"></i>
+                                    Add Project
+                                </button>
+                            </div>
+                            <div class="card-widget-body" style="padding:0;">
+                                <div class="table-responsive">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Project Title</th>
+                                                <th>Project Type</th>
+                                                <th>Price (₹)</th>
+                                                <th>Assigned To</th>
+                                                <th>Status</th>
+                                                <th>Created On</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="admin-dashboard-projects-tbody">
+                                            <!-- Dynamic items seeded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Employee Summary Widget -->
+                        <div class="card-widget">
+                            <div class="card-widget-header">
+                                <span class="card-widget-title">Employee Summary</span>
+                                <a href="#" class="forgot-password" style="font-size:0.75rem;" onclick="switchAdminPanel('admin-employees-panel')">View All</a>
+                            </div>
+                            <div class="card-widget-body">
+                                <div class="employee-summary-list" id="admin-employee-summary-list">
+                                    <!-- Dynamic rows seeded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Project Completion & Deployment Details Form -->
+                    <div class="card-widget">
+                        <div class="card-widget-header">
+                            <div>
+                                <span class="card-widget-title">Project Completion & Deployment Details</span>
+                                <div class="card-widget-subtitle">Submit server and repository configurations for deployed projects</div>
+                            </div>
+                        </div>
+                        <div class="card-widget-body">
+                            <form id="admin-deployment-form">
+                                <div class="form-grid-3">
+                                    <div class="form-control-wrapper">
+                                        <label for="admin-deploy-project-select" class="required-star">Select Project</label>
+                                        <select id="admin-deploy-project-select" class="form-input" required>
+                                            <option value="" disabled selected>Choose Project</option>
+                                            <!-- Seed options dynamically -->
+                                        </select>
+                                    </div>
+                                    <div class="form-control-wrapper">
+                                        <label for="admin-deploy-domain">Domain</label>
+                                        <input type="text" id="admin-deploy-domain" class="form-input" placeholder="example.com">
+                                    </div>
+                                    <div class="form-control-wrapper">
+                                        <label for="admin-deploy-hosting">Hosting</label>
+                                        <input type="text" id="admin-deploy-hosting" class="form-input" placeholder="hostinger.com">
+                                    </div>
+                                </div>
+                                <div class="form-grid-3" style="margin-top:0.5rem;">
+                                    <div class="form-control-wrapper">
+                                        <label for="admin-deploy-server">Server</label>
+                                        <input type="text" id="admin-deploy-server" class="form-input" placeholder="Server Details">
+                                    </div>
+                                    <div class="form-control-wrapper">
+                                        <label for="admin-deploy-github">GitHub Repository</label>
+                                        <input type="text" id="admin-deploy-github" class="form-input" placeholder="https://github.com/user/repo">
+                                    </div>
+                                    <div class="form-control-wrapper">
+                                        <label for="admin-deploy-credentials">Credentials / Notes</label>
+                                        <input type="text" id="admin-deploy-credentials" class="form-input" placeholder="Enter credentials or notes">
+                                    </div>
+                                </div>
+                                <div class="form-footer-action">
+                                    <button type="submit" class="btn-primary admin-btn" id="admin-deploy-submit-btn">Save Details</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= PANEL 2: ADMIN FULL PROJECTS PANEL ================= -->
+                <div id="admin-projects-panel" class="admin-panel-section hidden">
+                    <div class="card-widget">
+                        <div class="card-widget-header">
+                            <div>
+                                <span class="card-widget-title" id="admin-projects-list-title">All Projects</span>
+                                <div class="card-widget-subtitle">Detailed log of all projects within the workspace</div>
+                            </div>
+                            <div style="display:flex;gap:0.75rem;">
+                                <select id="admin-project-filter-select" class="form-input" style="padding:0.4rem;width:150px;" onchange="filterAdminProjectsTable(this.value)">
+                                    <option value="all">All Statuses</option>
+                                    <option value="Not Started">Not Started</option>
+                                    <option value="Ongoing">Ongoing</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                                <button class="btn-primary admin-btn" onclick="openAddProjectModal()">
+                                    <i data-lucide="plus" style="width:14px;height:14px;"></i>
+                                    Add Project
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-widget-body" style="padding:0;">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Project Title</th>
+                                            <th>Project Type</th>
+                                            <th>Price (₹)</th>
+                                            <th>Assigned To</th>
+                                            <th>Status</th>
+                                            <th>Created On</th>
+                                            <th>Hosting Detail</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-full-projects-tbody">
+                                        <!-- Rendered dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= PANEL 3: ADMIN FULL EMPLOYEES PANEL ================= -->
+                <div id="admin-employees-panel" class="admin-panel-section hidden">
+                    <div class="card-widget">
+                        <div class="card-widget-header">
+                            <div>
+                                <span class="card-widget-title">Employees Directory</span>
+                                <div class="card-widget-subtitle">Manage and add employee user profiles</div>
+                            </div>
+                            <button class="btn-primary admin-btn" onclick="openAddEmployeeModal()">
+                                <i data-lucide="user-plus" style="width:14px;height:14px;"></i>
+                                Add Employee
+                            </button>
+                        </div>
+                        <div class="card-widget-body" style="padding:0;">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Initials</th>
+                                            <th>Name</th>
+                                            <th>Username</th>
+                                            <th>Role</th>
+                                            <th>Assigned Projects</th>
+                                            <th>Ongoing</th>
+                                            <th>Completed</th>
+                                            <th>Total Earned</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-full-employees-tbody">
+                                        <!-- Rendered dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+
+    <!-- ==========================================================================
+       3. EMPLOYEE DASHBOARD SECTION (image copy 2.png style)
+       ========================================================================== -->
+    <div id="employee-view" class="dashboard-wrapper hidden">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar employee-theme">
+            <div class="sidebar-header">
+                <div class="logo-area">
+                    <div class="logo-icon" style="width:36px;height:36px; background: linear-gradient(135deg, #a78bfa, #5c25d2);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <h1 style="font-size:1rem;">CODTECH</h1>
+                        <span style="font-size:0.6rem; color:var(--employee-sidebar-text);">IT SOLUTIONS</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <div class="menu-group-title" style="margin-top:0.5rem;">Employee Menu</div>
+                <a href="#" class="sidebar-link active" data-target="employee-dashboard-panel">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="sidebar-link" data-target="employee-projects-panel" id="employee-sidebar-projects-link">
+                    <i data-lucide="folder-kanban"></i>
+                    <span>My Projects</span>
+                </a>
+                <a href="#" class="sidebar-link" data-target="employee-projects-panel" onclick="filterEmployeeProjectsTable('Completed')">
+                    <i data-lucide="check-circle-2"></i>
+                    <span>Completed Projects</span>
+                </a>
+                <a href="#" class="sidebar-link" data-target="employee-dashboard-panel" onclick="focusEmployeeDeployForm()">
+                    <i data-lucide="globe"></i>
+                    <span>Update Deployment</span>
+                </a>
+                <a href="#" class="sidebar-link" onclick="alert('Profile editor is under development.')">
+                    <i data-lucide="user"></i>
+                    <span>My Profile</span>
+                </a>
+                <a href="#" class="sidebar-link" onclick="openChangePasswordModal()">
+                    <i data-lucide="key-round"></i>
+                    <span>Change Password</span>
+                </a>
+                
+                <a href="#" class="sidebar-link" style="margin-top: 4rem; color: #f87171;" id="employee-logout-btn">
+                    <i data-lucide="log-out"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Body Panel -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="toggle-sidebar-btn" id="employee-toggle-sidebar-btn">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <h2 class="page-title" id="employee-panel-title">Employee Dashboard</h2>
+                    <div class="header-search">
+                        <input type="text" placeholder="Search anything..." oninput="alert('Search feature is mock.')">
+                        <i data-lucide="search"></i>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="notification-badge-wrapper" onclick="alert('No new employee notifications')">
+                        <button class="notification-btn">
+                            <i data-lucide="bell"></i>
+                        </button>
+                        <span class="notification-badge employee-theme-badge">2</span>
+                    </div>
+                    <div class="user-profile-badge">
+                        <div class="avatar-circle employee" id="employee-avatar-header">E</div>
+                        <div class="profile-info">
+                            <span class="profile-name" id="employee-name-header">Employee Name</span>
+                            <span class="profile-role" id="employee-role-header">Developer</span>
+                        </div>
+                        <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--text-muted);"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content Container -->
+            <div class="content-body">
+                
+                <!-- ================= PANEL 1: EMPLOYEE MAIN DASHBOARD OVERVIEW ================= -->
+                <div id="employee-dashboard-panel" class="employee-panel-section">
+                    <!-- Row 1: KPI Stats Cards (4 items) -->
+                    <div class="kpi-grid employee-cols">
+                        <!-- Assigned Projects -->
+                        <div class="kpi-card">
+                            <div class="kpi-details">
+                                <span class="kpi-label">Assigned Projects</span>
+                                <span class="kpi-value" id="kpi-emp-assigned">8</span>
+                                <span class="kpi-subtext">Total Assigned</span>
+                            </div>
+                            <div class="kpi-icon-container" style="background-color: #f5f3ff; color: var(--employee-primary);">
+                                <i data-lucide="folder"></i>
+                            </div>
+                        </div>
+                        <!-- Ongoing Projects -->
+                        <div class="kpi-card">
+                            <div class="kpi-details">
+                                <span class="kpi-label">Ongoing Projects</span>
+                                <span class="kpi-value" id="kpi-emp-ongoing">3</span>
+                                <span class="kpi-subtext">In Progress</span>
+                            </div>
+                            <div class="kpi-icon-container" style="background-color: #fff7ed; color: #ea580c;">
+                                <i data-lucide="play-circle"></i>
+                            </div>
+                        </div>
+                        <!-- Completed Projects -->
+                        <div class="kpi-card">
+                            <div class="kpi-details">
+                                <span class="kpi-label">Completed Projects</span>
+                                <span class="kpi-value" id="kpi-emp-completed">5</span>
+                                <span class="kpi-subtext">Completed</span>
+                            </div>
+                            <div class="kpi-icon-container" style="background-color: #f0fdf4; color: #16a34a;">
+                                <i data-lucide="check-circle-2"></i>
+                            </div>
+                        </div>
+                        <!-- Total Earned -->
+                        <div class="kpi-card">
+                            <div class="kpi-details">
+                                <span class="kpi-label">Total Earned</span>
+                                <span class="kpi-value" id="kpi-emp-earned">₹ 3,20,000</span>
+                                <span class="kpi-subtext">From Completed Projects</span>
+                            </div>
+                            <div class="kpi-icon-container" style="background-color: #eff6ff; color: #2563eb;">
+                                <i data-lucide="indian-rupee"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2 Grid layout (3 cols: My Projects table, deployment details form, charts details) -->
+                    <div class="employee-layout-grid">
+                        
+                        <!-- Left Column: Pills & Projects Table -->
+                        <div>
+                            <!-- Pills Overview -->
+                            <div class="pills-container">
+                                <div class="pill-stat blue">
+                                    <span class="pill-stat-num" id="pill-emp-assigned">8</span>
+                                    <span class="pill-stat-lbl">Total Assigned</span>
+                                </div>
+                                <div class="pill-stat orange">
+                                    <span class="pill-stat-num" id="pill-emp-ongoing">3</span>
+                                    <span class="pill-stat-lbl">Ongoing</span>
+                                </div>
+                                <div class="pill-stat green">
+                                    <span class="pill-stat-num" id="pill-emp-completed">5</span>
+                                    <span class="pill-stat-lbl">Completed</span>
+                                </div>
+                                <div class="pill-stat purple">
+                                    <span class="pill-stat-num" id="pill-emp-earned">₹ 3.2L</span>
+                                    <span class="pill-stat-lbl">Total Earned</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Projects Table -->
+                            <div class="card-widget">
+                                <div class="card-widget-header">
+                                    <span class="card-widget-title">My Projects</span>
+                                </div>
+                                <div class="card-widget-body" style="padding:0;">
+                                    <div class="table-responsive">
+                                        <table class="data-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Project Title</th>
+                                                    <th>Project Type</th>
+                                                    <th>Price (₹)</th>
+                                                    <th>Status</th>
+                                                    <th>Assigned On</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="employee-dashboard-projects-tbody">
+                                                <!-- Dynamic content -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Middle Column: Update Deployment Details Form -->
+                        <div class="card-widget">
+                            <div class="card-widget-header">
+                                <div>
+                                    <span class="card-widget-title">Update Deployment Details</span>
+                                    <div class="card-widget-subtitle" style="font-size:0.7rem;">Add hosting, domain, server and GitHub credentials for completed projects.</div>
+                                </div>
+                            </div>
+                            <div class="card-widget-body employee-theme">
+                                <form id="employee-deployment-form">
+                                    <div class="form-control-wrapper">
+                                        <label for="employee-deploy-project-select" class="required-star">Select Project</label>
+                                        <select id="employee-deploy-project-select" class="form-input" required>
+                                            <option value="" disabled selected>Select Project</option>
+                                            <!-- Dynamically populated -->
+                                        </select>
+                                    </div>
+                                    <div class="form-grid-2">
+                                        <div class="form-control-wrapper">
+                                            <label for="employee-deploy-domain">Domain</label>
+                                            <input type="text" id="employee-deploy-domain" class="form-input" placeholder="example.com">
+                                        </div>
+                                        <div class="form-control-wrapper">
+                                            <label for="employee-deploy-hosting">Hosting</label>
+                                            <input type="text" id="employee-deploy-hosting" class="form-input" placeholder="hostinger.com">
+                                        </div>
+                                    </div>
+                                    <div class="form-grid-2">
+                                        <div class="form-control-wrapper">
+                                            <label for="employee-deploy-server">Server</label>
+                                            <input type="text" id="employee-deploy-server" class="form-input" placeholder="Server Details / IP">
+                                        </div>
+                                        <div class="form-control-wrapper">
+                                            <label for="employee-deploy-github">GitHub Repository</label>
+                                            <input type="text" id="employee-deploy-github" class="form-input" placeholder="https://github.com/username/repo">
+                                        </div>
+                                    </div>
+                                    <div class="form-control-wrapper">
+                                        <label for="employee-deploy-credentials">Credentials / Notes</label>
+                                        <textarea id="employee-deploy-credentials" class="form-input" placeholder="Enter any credentials or notes"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn-primary employee-btn" id="employee-deploy-submit-btn">Save Details</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Earnings Trend & Completed Projects List -->
+                        <div>
+                            <!-- My Earnings Summary Chart -->
+                            <div class="card-widget">
+                                <div class="card-widget-header">
+                                    <div>
+                                        <span class="card-widget-title">My Earnings Summary</span>
+                                        <div class="card-widget-subtitle">Total Earned: <strong id="employee-line-chart-total-earned" style="color:var(--text-dark);">₹ 3,20,000</strong></div>
+                                    </div>
+                                </div>
+                                <div class="card-widget-body">
+                                    <div id="employee-earnings-line-chart" class="chart-container-line"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Recent Completed Projects List -->
+                            <div class="card-widget">
+                                <div class="card-widget-header">
+                                    <span class="card-widget-title">Recent Completed Projects</span>
+                                    <a href="#" class="forgot-password" style="font-size:0.75rem;" onclick="switchEmployeePanel('employee-projects-panel')">View All</a>
+                                </div>
+                                <div class="card-widget-body">
+                                    <div class="recent-project-list" id="employee-recent-completed-list">
+                                        <!-- Dynamic content -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ================= PANEL 2: EMPLOYEE PROJECTS PANEL ================= -->
+                <div id="employee-projects-panel" class="employee-panel-section hidden">
+                    <div class="card-widget">
+                        <div class="card-widget-header">
+                            <div>
+                                <span class="card-widget-title" id="employee-projects-list-title">My Assigned Projects</span>
+                                <div class="card-widget-subtitle">List of all projects assigned to your profile</div>
+                            </div>
+                            <div>
+                                <select id="employee-project-filter-select" class="form-input" style="padding:0.4rem;width:150px;" onchange="filterEmployeeProjectsTable(this.value)">
+                                    <option value="all">All Projects</option>
+                                    <option value="Ongoing">Ongoing Only</option>
+                                    <option value="Completed">Completed Only</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-widget-body" style="padding:0;">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Project Title</th>
+                                            <th>Project Type</th>
+                                            <th>Price (₹)</th>
+                                            <th>Status</th>
+                                            <th>Assigned On</th>
+                                            <th>Hosting Details</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="employee-full-projects-tbody">
+                                        <!-- Rendered dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+
+    <!-- ==========================================================================
+       4. MODALS & POPUPS
+       ========================================================================== -->
+    
+    <!-- Add Project Modal -->
+    <div id="add-project-modal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <span class="modal-title">Create New Project</span>
+                <button class="btn-modal-close" onclick="closeAddProjectModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="add-project-form">
+                    <div class="form-control-wrapper">
+                        <label for="proj-title" class="required-star">Project Title</label>
+                        <input type="text" id="proj-title" class="form-input" placeholder="e.g. E-Commerce Website" required>
+                    </div>
+                    <div class="form-grid-2">
+                        <div class="form-control-wrapper">
+                            <label for="proj-type" class="required-star">Project Type</label>
+                            <select id="proj-type" class="form-input" required>
+                                <option value="" disabled selected>Select Type</option>
+                                <option value="Static">Static</option>
+                                <option value="Dynamic">Dynamic</option>
+                                <option value="Multiple Dynamic">Multiple Dynamic</option>
+                                <option value="App">App</option>
+                            </select>
+                        </div>
+                        <div class="form-control-wrapper">
+                            <label for="proj-price" class="required-star">Project Price (₹)</label>
+                            <input type="number" id="proj-price" class="form-input" placeholder="e.g. 45000" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-control-wrapper">
+                        <label for="proj-assign">Assign Employee</label>
+                        <select id="proj-assign" class="form-input">
+                            <option value="">Do Not Assign Yet</option>
+                            <!-- Seeded dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-footer-action" style="gap:0.75rem;">
+                        <button type="button" class="btn-primary" style="background-color:#e2e8f0;color:var(--text-medium);" onclick="closeAddProjectModal()">Cancel</button>
+                        <button type="submit" class="btn-primary admin-btn">Create Project</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Employee Modal -->
+    <div id="add-employee-modal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <span class="modal-title">Add New Employee Profile</span>
+                <button class="btn-modal-close" onclick="closeAddEmployeeModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="add-employee-form">
+                    <div class="form-control-wrapper">
+                        <label for="emp-fullname" class="required-star">Full Name</label>
+                        <input type="text" id="emp-fullname" class="form-input" placeholder="e.g. John Doe" required>
+                    </div>
+                    <div class="form-control-wrapper">
+                        <label for="emp-role" class="required-star">Job Role / Title</label>
+                        <input type="text" id="emp-role" class="form-input" placeholder="e.g. Frontend Developer" required>
+                    </div>
+                    <div class="form-grid-2">
+                        <div class="form-control-wrapper">
+                            <label for="emp-username" class="required-star">Username</label>
+                            <input type="text" id="emp-username" class="form-input" placeholder="e.g. john_doe" required>
+                        </div>
+                        <div class="form-control-wrapper">
+                            <label for="emp-password" class="required-star">Password</label>
+                            <input type="password" id="emp-password" class="form-input" placeholder="Enter password" required>
+                        </div>
+                    </div>
+                    <div class="form-footer-action" style="gap:0.75rem;">
+                        <button type="button" class="btn-primary" style="background-color:#e2e8f0;color:var(--text-medium);" onclick="closeAddEmployeeModal()">Cancel</button>
+                        <button type="submit" class="btn-primary admin-btn">Create Employee</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Project Modal -->
+    <div id="assign-project-modal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <span class="modal-title">Assign Projects to Employee</span>
+                <button class="btn-modal-close" onclick="closeAssignProjectModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="assign-project-form">
+                    <div class="form-control-wrapper">
+                        <label for="assign-emp-select" class="required-star">Select Employee</label>
+                        <select id="assign-emp-select" class="form-input" required>
+                            <option value="" disabled selected>Choose Employee</option>
+                            <!-- Seeded dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-control-wrapper">
+                        <label for="assign-proj-select" class="required-star">Select Project</label>
+                        <select id="assign-proj-select" class="form-input" required>
+                            <option value="" disabled selected>Choose Project</option>
+                            <!-- Seeded dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-footer-action" style="gap:0.75rem;">
+                        <button type="button" class="btn-primary" style="background-color:#e2e8f0;color:var(--text-medium);" onclick="closeAssignProjectModal()">Cancel</button>
+                        <button type="submit" class="btn-primary admin-btn">Assign Project</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="change-password-modal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <span class="modal-title">Change Account Password</span>
+                <button class="btn-modal-close" onclick="closeChangePasswordModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="change-password-form">
+                    <div class="form-control-wrapper">
+                        <label for="old-pass" class="required-star">Current Password</label>
+                        <input type="password" id="old-pass" class="form-input" placeholder="Enter current password" required>
+                    </div>
+                    <div class="form-control-wrapper">
+                        <label for="new-pass" class="required-star">New Password</label>
+                        <input type="password" id="new-pass" class="form-input" placeholder="Enter new password" required>
+                    </div>
+                    <div class="form-footer-action" style="gap:0.75rem;">
+                        <button type="button" class="btn-primary" style="background-color:#e2e8f0;color:var(--text-medium);" onclick="closeChangePasswordModal()">Cancel</button>
+                        <button type="submit" class="btn-primary employee-btn" style="width:auto;">Update Password</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Project Deployment Details Modal (Read Only) -->
+    <div id="view-deployment-modal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <span class="modal-title" id="view-deploy-title">Project Deployment Details</span>
+                <button class="btn-modal-close" onclick="closeViewDeploymentModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex;flex-direction:column;gap:1rem;font-size:0.85rem;">
+                    <div>
+                        <strong style="color:var(--text-medium);">Project:</strong>
+                        <span id="view-deploy-project-name" style="margin-left:0.5rem;font-weight:600;">E-Commerce Website</span>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div>
+                            <strong style="color:var(--text-medium);">Domain:</strong>
+                            <div id="view-deploy-domain" style="padding:0.4rem;background:#f8fafc;border-radius:4px;margin-top:0.25rem;font-family:monospace;">example.com</div>
+                        </div>
+                        <div>
+                            <strong style="color:var(--text-medium);">Hosting Provider:</strong>
+                            <div id="view-deploy-hosting" style="padding:0.4rem;background:#f8fafc;border-radius:4px;margin-top:0.25rem;font-family:monospace;">hostinger.com</div>
+                        </div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div>
+                            <strong style="color:var(--text-medium);">Server details / IP:</strong>
+                            <div id="view-deploy-server" style="padding:0.4rem;background:#f8fafc;border-radius:4px;margin-top:0.25rem;font-family:monospace;">192.168.1.1</div>
+                        </div>
+                        <div>
+                            <strong style="color:var(--text-medium);">GitHub Repository:</strong>
+                            <div id="view-deploy-github" style="padding:0.4rem;background:#f8fafc;border-radius:4px;margin-top:0.25rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:monospace;">https://github.com/...</div>
+                        </div>
+                    </div>
+                    <div>
+                        <strong style="color:var(--text-medium);">Credentials / Notes:</strong>
+                        <div id="view-deploy-credentials" style="padding:0.6rem;background:#f8fafc;border-radius:4px;margin-top:0.25rem;white-space:pre-wrap;font-family:monospace;min-height:60px;">Notes content</div>
+                    </div>
+                </div>
+                <div class="form-footer-action">
+                    <button type="button" class="btn-primary" style="background-color:var(--admin-primary);color:var(--white);" onclick="closeViewDeploymentModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================== JS Scripts ========================== -->
+    <!-- App Script -->
+    <script src="app.js"></script>
+</body>
+</html>
