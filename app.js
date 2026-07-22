@@ -85,13 +85,28 @@ async function initDatabase() {
             if (!empError && !projError && empData && projData) {
                 console.log("Successfully connected to Supabase and loaded tables!");
                 useSupabase = true;
-                cacheEmployees = empData;
-                cacheProjects = projData;
+                
+                // Safe check: If tables exist but are empty, seed them automatically
+                if (empData && empData.length > 0) {
+                    cacheEmployees = empData;
+                } else {
+                    cacheEmployees = DEFAULT_EMPLOYEES;
+                    await supabaseClient.from('employees').upsert(DEFAULT_EMPLOYEES);
+                }
+                
+                if (projData && projData.length > 0) {
+                    cacheProjects = projData;
+                } else {
+                    cacheProjects = DEFAULT_PROJECTS;
+                    await supabaseClient.from('projects').upsert(DEFAULT_PROJECTS);
+                }
                 
                 // Fetch Logs
                 const { data: logData, error: logError } = await supabaseClient.from('system_logs').select('*').order('created_at', { ascending: false }).limit(20);
                 if (!logError && logData) {
                     cacheLogs = logData;
+                } else {
+                    cacheLogs = [];
                 }
                 
                 // Sync to LocalStorage as a local copy
