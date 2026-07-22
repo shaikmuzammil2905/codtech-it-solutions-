@@ -666,55 +666,61 @@ function renderAdminEmployeesPanel() {
 }
 
 // Auto-fill form inputs when project is selected in Admin deployment form
-document.getElementById("admin-deploy-project-select").addEventListener("change", function() {
-    const projectId = this.value;
-    const projects = getProjects();
-    const proj = projects.find(p => p.id === projectId);
-    
-    if (proj && proj.deployment) {
-        document.getElementById("admin-deploy-domain").value = proj.deployment.domain || "";
-        document.getElementById("admin-deploy-hosting").value = proj.deployment.hosting || "";
-        document.getElementById("admin-deploy-server").value = proj.deployment.server || "";
-        document.getElementById("admin-deploy-github").value = proj.deployment.github || "";
-        document.getElementById("admin-deploy-credentials").value = proj.deployment.credentials || "";
-    } else {
-        document.getElementById("admin-deploy-domain").value = "";
-        document.getElementById("admin-deploy-hosting").value = "";
-        document.getElementById("admin-deploy-server").value = "";
-        document.getElementById("admin-deploy-github").value = "";
-        document.getElementById("admin-deploy-credentials").value = "";
-    }
-});
+const adminDeploySelect = document.getElementById("admin-deploy-project-select");
+if (adminDeploySelect) {
+    adminDeploySelect.addEventListener("change", function() {
+        const projectId = this.value;
+        const projects = getProjects();
+        const proj = projects.find(p => p.id === projectId);
+        
+        if (proj && proj.deployment) {
+            document.getElementById("admin-deploy-domain").value = proj.deployment.domain || "";
+            document.getElementById("admin-deploy-hosting").value = proj.deployment.hosting || "";
+            document.getElementById("admin-deploy-server").value = proj.deployment.server || "";
+            document.getElementById("admin-deploy-github").value = proj.deployment.github || "";
+            document.getElementById("admin-deploy-credentials").value = proj.deployment.credentials || "";
+        } else {
+            document.getElementById("admin-deploy-domain").value = "";
+            document.getElementById("admin-deploy-hosting").value = "";
+            document.getElementById("admin-deploy-server").value = "";
+            document.getElementById("admin-deploy-github").value = "";
+            document.getElementById("admin-deploy-credentials").value = "";
+        }
+    });
+}
 
 // Admin deployment details form submit
-document.getElementById("admin-deployment-form").addEventListener("submit", function(e) {
-    e.preventDefault();
-    const projectId = document.getElementById("admin-deploy-project-select").value;
-    if (!projectId) return;
-    
-    const projects = getProjects();
-    const index = projects.findIndex(p => p.id === projectId);
-    
-    if (index !== -1) {
-        projects[index].deployment = {
-            domain: document.getElementById("admin-deploy-domain").value.trim(),
-            hosting: document.getElementById("admin-deploy-hosting").value.trim(),
-            server: document.getElementById("admin-deploy-server").value.trim(),
-            github: document.getElementById("admin-deploy-github").value.trim(),
-            credentials: document.getElementById("admin-deploy-credentials").value.trim()
-        };
-        // Mark project as Completed automatically when deployment detail is saved!
-        projects[index].status = "Completed";
+const adminDeployForm = document.getElementById("admin-deployment-form");
+if (adminDeployForm) {
+    adminDeployForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const projectId = document.getElementById("admin-deploy-project-select").value;
+        if (!projectId) return;
         
-        saveProjects(projects);
-        alert(`Deployment Details updated successfully for ${projects[index].title}! Project status updated to Completed.`);
+        const projects = getProjects();
+        const index = projects.findIndex(p => p.id === projectId);
         
-        // Reset form
-        this.reset();
-        
-        renderAdminDashboard();
-    }
-});
+        if (index !== -1) {
+            projects[index].deployment = {
+                domain: document.getElementById("admin-deploy-domain").value.trim(),
+                hosting: document.getElementById("admin-deploy-hosting").value.trim(),
+                server: document.getElementById("admin-deploy-server").value.trim(),
+                github: document.getElementById("admin-deploy-github").value.trim(),
+                credentials: document.getElementById("admin-deploy-credentials").value.trim()
+            };
+            // Mark project as Completed automatically when deployment detail is saved!
+            projects[index].status = "Completed";
+            
+            saveProjects(projects);
+            alert(`Deployment Details updated successfully for ${projects[index].title}! Project status updated to Completed.`);
+            
+            // Reset form
+            this.reset();
+            
+            renderAdminDashboard();
+        }
+    });
+}
 
 // ==========================================================================
 // RENDER EMPLOYEE DASHBOARD PANELS
@@ -1663,10 +1669,6 @@ INSERT INTO projects (id, title, type, price, assignedTo, status, createdOn, dep
 ('p26', 'Cryptocurrency Widget', 'Static', 15000, NULL, 'Not Started', '15 Jul 2026', '{}'),
 ('p27', 'Internal Wiki Board', 'Static', 20000, NULL, 'Not Started', '10 Jul 2026', '{}')
 ON CONFLICT (id) DO NOTHING;`;
-
-    document.getElementById("supabase-sql-code").value = sqlScript;
-    document.getElementById("supabase-sql-modal").classList.remove("hidden");
-}
 
     document.getElementById("supabase-sql-code").value = sqlScript;
     document.getElementById("supabase-sql-modal").classList.remove("hidden");
