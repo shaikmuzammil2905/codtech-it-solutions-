@@ -230,13 +230,37 @@ let currentSession = null;
 // SESSION MANAGEMENT (LOGIN/LOGOUT)
 // ==========================================================================
 
+function safePushState(path) {
+    try {
+        if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+            window.history.pushState({}, "", path);
+        }
+    } catch(e) {
+        console.warn("History pushState blocked (running standalone):", e);
+    }
+}
+
 function checkSession() {
     const session = localStorage.getItem("session");
+    const path = window.location.pathname;
+    
     if (session) {
         currentSession = JSON.parse(session);
-        loadDashboard();
+        if (path === "/admin" && currentSession.role !== "admin") {
+            logout();
+        } else if (path === "/employee" && currentSession.role !== "employee") {
+            logout();
+        } else {
+            loadDashboard();
+        }
     } else {
         showView("login-view");
+        const title = document.querySelector(".login-card h2");
+        if (path === "/admin" && title) {
+            title.textContent = "Admin Portal Sign In";
+        } else if (path === "/employee" && title) {
+            title.textContent = "Employee Portal Sign In";
+        }
     }
 }
 
@@ -294,6 +318,11 @@ function logout() {
     document.getElementById("username").value = "";
     document.getElementById("password").value = "";
     document.getElementById("login-error").classList.add("hidden");
+    
+    const title = document.querySelector(".login-card h2");
+    if (title) title.textContent = "Sign In to Your Portal";
+    
+    safePushState("/");
     showView("login-view");
 }
 
@@ -317,10 +346,12 @@ document.getElementById("toggle-password-btn").addEventListener("click", functio
 
 function loadDashboard() {
     if (currentSession.role === "admin") {
+        safePushState("/admin");
         showView("admin-view");
         switchAdminPanel("admin-dashboard-panel");
         renderAdminDashboard();
     } else {
+        safePushState("/employee");
         showView("employee-view");
         switchEmployeePanel("employee-dashboard-panel");
         renderEmployeeDashboard();
