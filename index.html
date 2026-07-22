@@ -10,6 +10,8 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- Lucide Icons CDN -->
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -204,58 +206,25 @@
             <nav class="sidebar-menu">
                 <a href="#" class="sidebar-link active" data-target="admin-dashboard-panel">
                     <i data-lucide="layout-dashboard"></i>
-                    <span>Dashboard</span>
-                </a>
-
-                <div class="menu-group-title">Project Management</div>
-                <a href="#" class="sidebar-link" data-target="admin-projects-panel" id="admin-sidebar-projects-link">
-                    <i data-lucide="folder-kanban"></i>
-                    <span>Projects</span>
-                </a>
-                <a href="#" class="sidebar-link" onclick="openAddProjectModal()">
-                    <i data-lucide="plus-circle"></i>
-                    <span>Add Project</span>
-                </a>
-                <a href="#" class="sidebar-link" data-target="admin-projects-panel" onclick="filterAdminProjectsTable('all')">
-                    <i data-lucide="list"></i>
-                    <span>Project List</span>
-                </a>
-                <a href="#" class="sidebar-link" data-target="admin-projects-panel" onclick="filterAdminProjectsTable('Completed')">
-                    <i data-lucide="check-circle-2"></i>
-                    <span>Completed Projects</span>
-                </a>
-
-                <div class="menu-group-title">Employee Management</div>
-                <a href="#" class="sidebar-link" data-target="admin-employees-panel">
-                    <i data-lucide="users"></i>
-                    <span>Employees</span>
-                </a>
-                <a href="#" class="sidebar-link" onclick="openAssignProjectModal()">
-                    <i data-lucide="user-check"></i>
-                    <span>Assign Projects</span>
-                </a>
-
-                <div class="menu-group-title">Reports & Finance</div>
-                <a href="#" class="sidebar-link" onclick="alert('Payments report is under development.')">
-                    <i data-lucide="indian-rupee"></i>
-                    <span>Payments</span>
-                </a>
-                <a href="#" class="sidebar-link" onclick="alert('Reports section is under development.')">
-                    <i data-lucide="bar-chart-3"></i>
-                    <span>Reports</span>
-                </a>
-
-                <div class="menu-group-title">Settings</div>
-                <a href="#" class="sidebar-link" onclick="alert('Admin Profile details editing is under development.')">
-                    <i data-lucide="user"></i>
-                    <span>Profile</span>
-                </a>
-                <a href="#" class="sidebar-link" onclick="alert('Settings view is under development.')">
-                    <i data-lucide="settings"></i>
-                    <span>Settings</span>
+                    <span>Overview</span>
                 </a>
                 
-                <a href="#" class="sidebar-link" style="margin-top: 2rem; color: #f87171;" id="admin-logout-btn">
+                <a href="#" class="sidebar-link" data-target="admin-employees-panel">
+                    <i data-lucide="users"></i>
+                    <span>User Management</span>
+                </a>
+
+                <a href="#" class="sidebar-link" data-target="admin-projects-panel">
+                    <i data-lucide="folder-kanban"></i>
+                    <span>Financial Reports</span>
+                </a>
+
+                <a href="#" class="sidebar-link" data-target="admin-settings-panel">
+                    <i data-lucide="settings"></i>
+                    <span>System Settings</span>
+                </a>
+                
+                <a href="#" class="sidebar-link" style="margin-top: 4rem; color: #f87171;" id="admin-logout-btn">
                     <i data-lucide="log-out"></i>
                     <span>Logout</span>
                 </a>
@@ -270,22 +239,19 @@
                     <button class="toggle-sidebar-btn" id="admin-toggle-sidebar-btn">
                         <i data-lucide="menu"></i>
                     </button>
-                    <h2 class="page-title" id="admin-panel-title">Dashboard</h2>
+                    <div class="header-search-bar">
+                        <i data-lucide="search"></i>
+                        <input type="text" placeholder="Search..." id="admin-global-search">
+                    </div>
                 </div>
                 <div class="header-right">
-                    <div class="notification-badge-wrapper" onclick="alert('No new notifications for Admin')">
-                        <button class="notification-btn">
-                            <i data-lucide="bell"></i>
-                        </button>
-                        <span class="notification-badge admin-theme-badge">5</span>
-                    </div>
-                    <div class="user-profile-badge">
-                        <div class="avatar-circle admin">A</div>
+                    <div class="user-profile-badge" id="admin-profile-badge-trigger" onclick="switchAdminPanel('admin-settings-panel')">
+                        <img src="" alt="Admin Avatar" class="admin-avatar-img hidden" id="admin-header-avatar">
+                        <div class="avatar-circle admin" id="admin-header-avatar-fallback">JS</div>
                         <div class="profile-info">
-                            <span class="profile-name">Admin</span>
-                            <span class="profile-role">Administrator</span>
+                            <span class="profile-name" id="admin-header-name">Jane Smith</span>
+                            <span class="profile-role" id="admin-header-role">Administrator</span>
                         </div>
-                        <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--text-muted);"></i>
                     </div>
                 </div>
             </header>
@@ -294,194 +260,83 @@
             <div class="content-body">
                 
                 <!-- ================= PANEL 1: ADMIN MAIN DASHBOARD OVERVIEW ================= -->
-                <div id="admin-dashboard-panel" class="admin-panel-section">
-                    <!-- Row 1: 5 KPI Cards -->
-                    <div class="kpi-grid admin-cols">
-                        <!-- Total Projects -->
-                        <div class="kpi-card">
-                            <div class="kpi-details">
-                                <span class="kpi-label">Total Projects</span>
-                                <span class="kpi-value" id="kpi-admin-total-proj">24</span>
-                                <span class="kpi-subtext">All Time</span>
-                            </div>
-                            <div class="kpi-icon-container" style="background-color: #eff6ff; color: #2563eb;">
-                                <i data-lucide="folder"></i>
+                <div id="admin-dashboard-panel" class="admin-panel-section animated-fade">
+                    <!-- Row 1: 3 KPI Cards exactly like image copy 5.png -->
+                    <div class="kpi-grid admin-cols-3">
+                        <!-- Total Users KPI Card -->
+                        <div class="kpi-card-new">
+                            <div class="kpi-card-progress blue"></div>
+                            <div class="kpi-card-content">
+                                <span class="kpi-card-label">Total Users</span>
+                                <span class="kpi-card-value" id="kpi-total-users">15,450</span>
                             </div>
                         </div>
-                        <!-- Ongoing Projects -->
-                        <div class="kpi-card">
-                            <div class="kpi-details">
-                                <span class="kpi-label">Ongoing Projects</span>
-                                <span class="kpi-value" id="kpi-admin-ongoing-proj">8</span>
-                                <span class="kpi-subtext">In Progress</span>
-                            </div>
-                            <div class="kpi-icon-container" style="background-color: #f0fdf4; color: #16a34a;">
-                                <i data-lucide="play-circle"></i>
+                        <!-- System Health KPI Card -->
+                        <div class="kpi-card-new">
+                            <div class="kpi-card-progress green"></div>
+                            <div class="kpi-card-content">
+                                <span class="kpi-card-label">System Health</span>
+                                <span class="kpi-card-value" id="kpi-system-health">99.8% Uptime</span>
                             </div>
                         </div>
-                        <!-- Completed Projects -->
-                        <div class="kpi-card">
-                            <div class="kpi-details">
-                                <span class="kpi-label">Completed Projects</span>
-                                <span class="kpi-value" id="kpi-admin-completed-proj">12</span>
-                                <span class="kpi-subtext">Completed</span>
-                            </div>
-                            <div class="kpi-icon-container" style="background-color: #fffbeb; color: #ea580c;">
-                                <i data-lucide="hourglass"></i>
-                            </div>
-                        </div>
-                        <!-- Employees -->
-                        <div class="kpi-card">
-                            <div class="kpi-details">
-                                <span class="kpi-label">Employees</span>
-                                <span class="kpi-value" id="kpi-admin-total-emp">6</span>
-                                <span class="kpi-subtext">Total Employees</span>
-                            </div>
-                            <div class="kpi-icon-container" style="background-color: #f5f3ff; color: #7c3aed;">
-                                <i data-lucide="users"></i>
-                            </div>
-                        </div>
-                        <!-- Total Payment Earned -->
-                        <div class="kpi-card">
-                            <div class="kpi-details">
-                                <span class="kpi-label">Total Payment Earned</span>
-                                <span class="kpi-value" id="kpi-admin-total-earned">₹ 12,45,000</span>
-                                <span class="kpi-subtext">All Time Earnings</span>
-                            </div>
-                            <div class="kpi-icon-container" style="background-color: #ecfeff; color: #0891b2;">
-                                <i data-lucide="indian-rupee"></i>
+                        <!-- Monthly Revenue KPI Card -->
+                        <div class="kpi-card-new">
+                            <div class="kpi-card-progress purple"></div>
+                            <div class="kpi-card-content">
+                                <span class="kpi-card-label">Monthly Revenue</span>
+                                <span class="kpi-card-value" id="kpi-monthly-revenue">$125,780</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Row 2: Charts & Recent Projects -->
-                    <div class="dashboard-row-grid-3">
-                        <!-- Project Overview Chart (Donut) -->
-                        <div class="card-widget">
-                            <div class="card-widget-header">
-                                <span class="card-widget-title">Project Overview</span>
-                            </div>
-                            <div class="card-widget-body">
-                                <div id="admin-project-donut-chart" class="chart-container-donut"></div>
-                            </div>
-                        </div>
-                        <!-- Payment Overview Chart (Line) -->
-                        <div class="card-widget">
-                            <div class="card-widget-header">
-                                <div>
-                                    <span class="card-widget-title">Payment Overview</span>
-                                    <div class="card-widget-subtitle">Total Earned: <strong id="admin-line-chart-total-earned" style="color:var(--text-dark);">₹ 12,45,000</strong></div>
-                                </div>
-                            </div>
-                            <div class="card-widget-body">
-                                <div id="admin-payment-line-chart" class="chart-container-line"></div>
-                            </div>
-                        </div>
-                        <!-- Recent Projects list -->
-                        <div class="card-widget">
-                            <div class="card-widget-header">
-                                <span class="card-widget-title">Recent Projects</span>
-                            </div>
-                            <div class="card-widget-body">
-                                <div class="recent-project-list" id="admin-recent-projects-list">
-                                    <!-- Dynamic rows seeded here -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Row 3: Projects Table & Employee Summary -->
+                    <!-- Row 2: Two Columns of Charts exactly like image copy 5.png -->
                     <div class="dashboard-row-grid-2">
-                        <!-- Projects Table Widget -->
-                        <div class="card-widget">
-                            <div class="card-widget-header">
-                                <span class="card-widget-title">Projects</span>
-                                <button class="btn-primary admin-btn" onclick="openAddProjectModal()">
-                                    <i data-lucide="plus" style="width:14px;height:14px;"></i>
-                                    Add Project
-                                </button>
+                        <!-- Revenue Growth Area Chart -->
+                        <div class="card-widget-new">
+                            <div class="card-widget-header-new">
+                                <span class="card-widget-title-new">Revenue Growth</span>
                             </div>
-                            <div class="card-widget-body" style="padding:0;">
-                                <div class="table-responsive">
-                                    <table class="data-table">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Project Title</th>
-                                                <th>Project Type</th>
-                                                <th>Price (₹)</th>
-                                                <th>Assigned To</th>
-                                                <th>Status</th>
-                                                <th>Created On</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="admin-dashboard-projects-tbody">
-                                            <!-- Dynamic items seeded here -->
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <div class="card-widget-body-new">
+                                <div id="admin-revenue-growth-chart" class="chart-container-line"></div>
                             </div>
                         </div>
-                        <!-- Employee Summary Widget -->
-                        <div class="card-widget">
-                            <div class="card-widget-header">
-                                <span class="card-widget-title">Employee Summary</span>
-                                <a href="#" class="forgot-password" style="font-size:0.75rem;" onclick="switchAdminPanel('admin-employees-panel')">View All</a>
+                        <!-- Project Status Donut Chart -->
+                        <div class="card-widget-new">
+                            <div class="card-widget-header-new">
+                                <span class="card-widget-title-new">Project Status</span>
                             </div>
-                            <div class="card-widget-body">
-                                <div class="employee-summary-list" id="admin-employee-summary-list">
-                                    <!-- Dynamic rows seeded here -->
+                            <div class="card-widget-body-new">
+                                <div id="admin-project-status-donut-chart" class="chart-container-donut"></div>
+                                <div class="chart-legend-custom">
+                                    <span class="legend-dot completed"></span> Completed
+                                    <span class="legend-dot pending"></span> Pending
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Row 4: Project Completion & Deployment Details Form -->
-                    <div class="card-widget">
-                        <div class="card-widget-header">
-                            <div>
-                                <span class="card-widget-title">Project Completion & Deployment Details</span>
-                                <div class="card-widget-subtitle">Submit server and repository configurations for deployed projects</div>
-                            </div>
+                    <!-- Row 3: Recent System Logs Table exactly like image copy 5.png -->
+                    <div class="card-widget-new">
+                        <div class="card-widget-header-new">
+                            <span class="card-widget-title-new">Recent System Logs</span>
                         </div>
-                        <div class="card-widget-body">
-                            <form id="admin-deployment-form">
-                                <div class="form-grid-3">
-                                    <div class="form-control-wrapper">
-                                        <label for="admin-deploy-project-select" class="required-star">Select Project</label>
-                                        <select id="admin-deploy-project-select" class="form-input" required>
-                                            <option value="" disabled selected>Choose Project</option>
-                                            <!-- Seed options dynamically -->
-                                        </select>
-                                    </div>
-                                    <div class="form-control-wrapper">
-                                        <label for="admin-deploy-domain">Domain</label>
-                                        <input type="text" id="admin-deploy-domain" class="form-input" placeholder="example.com">
-                                    </div>
-                                    <div class="form-control-wrapper">
-                                        <label for="admin-deploy-hosting">Hosting</label>
-                                        <input type="text" id="admin-deploy-hosting" class="form-input" placeholder="hostinger.com">
-                                    </div>
-                                </div>
-                                <div class="form-grid-3" style="margin-top:0.5rem;">
-                                    <div class="form-control-wrapper">
-                                        <label for="admin-deploy-server">Server</label>
-                                        <input type="text" id="admin-deploy-server" class="form-input" placeholder="Server Details">
-                                    </div>
-                                    <div class="form-control-wrapper">
-                                        <label for="admin-deploy-github">GitHub Repository</label>
-                                        <input type="text" id="admin-deploy-github" class="form-input" placeholder="https://github.com/user/repo">
-                                    </div>
-                                    <div class="form-control-wrapper">
-                                        <label for="admin-deploy-credentials">Credentials / Notes</label>
-                                        <input type="text" id="admin-deploy-credentials" class="form-input" placeholder="Enter credentials or notes">
-                                    </div>
-                                </div>
-                                <div class="form-footer-action">
-                                    <button type="submit" class="btn-primary admin-btn" id="admin-deploy-submit-btn">Save Details</button>
-                                </div>
-                            </form>
+                        <div class="card-widget-body-new" style="padding: 0;">
+                            <div class="table-responsive">
+                                <table class="data-table-new">
+                                    <thead>
+                                        <tr>
+                                            <th>Timesphapr</th>
+                                            <th>User</th>
+                                            <th>Action</th>
+                                            <th>Pending</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-system-logs-tbody">
+                                        <!-- Dynamic activity logs rendered here -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -540,10 +395,16 @@
                                 <span class="card-widget-title">Employees Directory</span>
                                 <div class="card-widget-subtitle">Manage and add employee user profiles</div>
                             </div>
-                            <button class="btn-primary admin-btn" onclick="openAddEmployeeModal()">
-                                <i data-lucide="user-plus" style="width:14px;height:14px;"></i>
-                                Add Employee
-                            </button>
+                            <div style="display:flex; gap:0.5rem;">
+                                <button class="btn-primary admin-btn" onclick="openAssignProjectModal()">
+                                    <i data-lucide="user-check" style="width:14px;height:14px;"></i>
+                                    Assign Projects
+                                </button>
+                                <button class="btn-primary admin-btn" onclick="openAddEmployeeModal()">
+                                    <i data-lucide="user-plus" style="width:14px;height:14px;"></i>
+                                    Add Employee
+                                </button>
+                            </div>
                         </div>
                         <div class="card-widget-body" style="padding:0;">
                             <div class="table-responsive">
@@ -565,6 +426,68 @@
                                         <!-- Rendered dynamically -->
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= PANEL 4: ADMIN SETTINGS / PROFILE PANEL ================= -->
+                <div id="admin-settings-panel" class="admin-panel-section hidden animated-fade">
+                    <div class="card-widget-new">
+                        <div class="card-widget-header-new">
+                            <span class="card-widget-title-new">Administrator Profile Settings</span>
+                        </div>
+                        <div class="card-widget-body-new">
+                            <div class="profile-settings-container">
+                                <div class="profile-avatar-upload-section">
+                                    <div class="avatar-preview-container">
+                                        <img src="" alt="Admin Profile Picture" id="admin-settings-avatar-preview" class="settings-avatar-img hidden">
+                                        <div class="avatar-circle admin large" id="admin-settings-avatar-fallback">JS</div>
+                                    </div>
+                                    <div class="upload-controls">
+                                        <label for="admin-avatar-upload" class="btn-primary admin-btn">
+                                            <i data-lucide="upload-cloud"></i> Upload New Photo
+                                        </label>
+                                        <input type="file" id="admin-avatar-upload" accept="image/*" class="hidden">
+                                        <span class="upload-hint">Unsigned upload directly to Cloudinary</span>
+                                    </div>
+                                </div>
+                                <form id="admin-profile-form" class="settings-form">
+                                    <div class="form-control-wrapper">
+                                        <label for="admin-settings-fullname">Full Name</label>
+                                        <input type="text" id="admin-settings-fullname" class="form-input" value="Jane Smith" required>
+                                    </div>
+                                    <div class="form-control-wrapper">
+                                        <label for="admin-settings-username">Username (Read Only)</label>
+                                        <input type="text" id="admin-settings-username" class="form-input" value="admin" readonly>
+                                    </div>
+                                    <div class="form-control-wrapper">
+                                        <label for="admin-settings-password">Change Password</label>
+                                        <input type="password" id="admin-settings-password" class="form-input" placeholder="Enter new password to update">
+                                    </div>
+                                    <button type="submit" class="btn-primary admin-btn" style="margin-top:1rem; width:auto;">Save Settings</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Supabase Connection Status Card -->
+                    <div class="card-widget-new">
+                        <div class="card-widget-header-new">
+                            <span class="card-widget-title-new">Database Integration Status</span>
+                        </div>
+                        <div class="card-widget-body-new">
+                            <div class="db-status-section">
+                                <div class="status-indicator-row">
+                                    <strong>Supabase Connection:</strong>
+                                    <span id="supabase-status-badge" class="status-badge ongoing">Checking...</span>
+                                </div>
+                                <p class="db-status-desc" id="supabase-status-desc">
+                                    Verifying tables in Supabase...
+                                </p>
+                                <button class="btn-primary admin-btn" id="btn-show-supabase-sql" style="margin-top:1rem; width:auto;">
+                                    <i data-lucide="terminal"></i> Show SQL Setup Script
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -613,7 +536,7 @@
                     <i data-lucide="globe"></i>
                     <span>Update Deployment</span>
                 </a>
-                <a href="#" class="sidebar-link" onclick="alert('Profile editor is under development.')">
+                <a href="#" class="sidebar-link" data-target="employee-profile-panel">
                     <i data-lucide="user"></i>
                     <span>My Profile</span>
                 </a>
@@ -650,7 +573,7 @@
                         </button>
                         <span class="notification-badge employee-theme-badge">2</span>
                     </div>
-                    <div class="user-profile-badge">
+                    <div class="user-profile-badge" id="employee-profile-badge-trigger" onclick="switchEmployeePanel('employee-profile-panel')" style="cursor: pointer;">
                         <div class="avatar-circle employee" id="employee-avatar-header">E</div>
                         <div class="profile-info">
                             <span class="profile-name" id="employee-name-header">Employee Name</span>
@@ -1083,6 +1006,27 @@
                 </div>
                 <div class="form-footer-action">
                     <button type="button" class="btn-primary" style="background-color:var(--admin-primary);color:var(--white);" onclick="closeViewDeploymentModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase SQL Setup Modal -->
+    <div id="supabase-sql-modal" class="modal-overlay hidden">
+        <div class="modal-container" style="max-width: 700px;">
+            <div class="modal-header">
+                <span class="modal-title">Supabase SQL Schema Setup</span>
+                <button class="btn-modal-close" onclick="closeSupabaseSqlModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.85rem; margin-bottom: 1rem; color: var(--text-medium);">
+                    To use Supabase as your database, copy the SQL queries below and execute them inside your Supabase project's <strong>SQL Editor</strong>.
+                </p>
+                <div class="sql-code-container" style="position: relative;">
+                    <textarea readonly id="supabase-sql-code" class="form-input" style="height: 300px; font-family: monospace; font-size: 0.75rem; background: #0f172a; color: #38bdf8; border: none; resize: none;"></textarea>
+                    <button class="btn-primary admin-btn" onclick="copySupabaseSql()" style="margin-top: 0.5rem; width: auto;">Copy SQL Script</button>
                 </div>
             </div>
         </div>

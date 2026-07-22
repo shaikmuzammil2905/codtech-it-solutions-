@@ -1253,11 +1253,13 @@ textarea.form-input {
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
     .sidebar {
-        position: absolute;
+        position: fixed;
         left: -260px;
         height: 100vh;
+        z-index: 9999;
+        box-shadow: 5px 0 25px rgba(15, 23, 42, 0.15);
     }
     .sidebar.show {
         left: 0;
@@ -1284,3 +1286,310 @@ textarea.form-input {
         display: none;
     }
 }
+
+/* ==========================================================================
+   NEW METRICS & PREMIUM STYLES (image copy 5.png)
+   ========================================================================== */
+.admin-cols-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.kpi-card-new {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 1.5rem 1.75rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(241, 245, 249, 0.8);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition-normal);
+}
+
+.kpi-card-new:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.06);
+}
+
+.kpi-card-progress {
+    height: 8px;
+    width: 80px;
+    border-radius: 20px;
+}
+
+.kpi-card-progress.blue {
+    background: #3b82f6;
+}
+
+.kpi-card-progress.green {
+    background: #34d399;
+}
+
+.kpi-card-progress.purple {
+    background: #a78bfa;
+}
+
+.kpi-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.kpi-card-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.kpi-card-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+/* New widgets layout */
+.card-widget-new {
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(241, 245, 249, 0.8);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: var(--transition-normal);
+}
+
+.card-widget-header-new {
+    padding: 1.25rem 1.75rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.card-widget-title-new {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.card-widget-body-new {
+    padding: 1.75rem;
+}
+
+/* Header search bar */
+.header-search-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f1f5f9;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    width: 280px;
+}
+
+.header-search-bar svg {
+    color: var(--text-muted);
+    width: 16px;
+    height: 16px;
+}
+
+.header-search-bar input {
+    border: none;
+    background: transparent;
+    font-size: 0.85rem;
+    width: 100%;
+    color: var(--text-dark);
+    outline: none;
+}
+
+/* Custom legend for Donut chart */
+.chart-legend-custom {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-medium);
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 0.25rem;
+}
+
+.legend-dot.completed {
+    background-color: #3b82f6;
+}
+
+.legend-dot.pending {
+    background-color: #ef4444;
+}
+
+/* Custom logs table styling */
+.data-table-new {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.data-table-new th {
+    padding: 1rem 1.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-align: left;
+    border-bottom: 1px solid #f1f5f9;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.data-table-new td {
+    padding: 1rem 1.75rem;
+    border-bottom: 1px solid #f8fafc;
+    color: var(--text-medium);
+}
+
+/* Profile photo settings layout */
+.profile-settings-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+}
+
+.profile-avatar-upload-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    border-right: 1px solid #f1f5f9;
+    padding-right: 2rem;
+}
+
+.avatar-preview-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-circle.large {
+    width: 100px;
+    height: 100px;
+    font-size: 2.2rem;
+}
+
+.upload-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.upload-hint {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.admin-avatar-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-circle.employee.large {
+    background-color: var(--employee-primary);
+    width: 100px;
+    height: 100px;
+    font-size: 2.2rem;
+}
+
+/* Database status style */
+.db-status-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.status-indicator-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.9rem;
+}
+
+.db-status-desc {
+    font-size: 0.8rem;
+    color: var(--text-medium);
+    line-height: 1.6;
+}
+
+/* Copy panel block styling */
+.sql-code-container {
+    background: #0f172a;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+/* Animation Classes */
+.animated-fade {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile responsive fixes */
+@media (max-width: 768px) {
+    .profile-settings-container {
+        grid-template-columns: 1fr;
+    }
+    .profile-avatar-upload-section {
+        border-right: none;
+        border-bottom: 1px solid #f1f5f9;
+        padding-right: 0;
+        padding-bottom: 2rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .admin-cols-3 {
+        grid-template-columns: 1fr;
+    }
+    .header-search-bar {
+        display: none;
+    }
+}
+

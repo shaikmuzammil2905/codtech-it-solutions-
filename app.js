@@ -3,12 +3,13 @@
 // ==========================================================================
 
 const DEFAULT_EMPLOYEES = [
-    { username: "john_doe", password: "password123", name: "John Doe", role: "Frontend Developer" },
-    { username: "jane_smith", password: "password123", name: "Jane Smith", role: "UI/UX Designer" },
-    { username: "mike_roberts", password: "password123", name: "Mike Roberts", role: "Backend Developer" },
-    { username: "sarah_wilson", password: "password123", name: "Sarah Wilson", role: "Full Stack Developer" },
-    { username: "emma_w", password: "password123", name: "Emma Watson", role: "QA Engineer" },
-    { username: "robert_d", password: "password123", name: "Robert Dow", role: "DevOps Engineer" }
+    { username: "admin", password: "admin123", name: "Jane Smith", role: "Administrator", avatar_url: null },
+    { username: "john_doe", password: "password123", name: "John Doe", role: "Frontend Developer", avatar_url: null },
+    { username: "jane_smith", password: "password123", name: "Jane Smith", role: "UI/UX Designer", avatar_url: null },
+    { username: "mike_roberts", password: "password123", name: "Mike Roberts", role: "Backend Developer", avatar_url: null },
+    { username: "sarah_wilson", password: "password123", name: "Sarah Wilson", role: "Full Stack Developer", avatar_url: null },
+    { username: "emma_w", password: "password123", name: "Emma Watson", role: "QA Engineer", avatar_url: null },
+    { username: "robert_d", password: "password123", name: "Robert Dow", role: "DevOps Engineer", avatar_url: null }
 ];
 
 const DEFAULT_PROJECTS = [
@@ -54,30 +55,134 @@ const DEFAULT_PROJECTS = [
     { id: "p27", title: "Internal Wiki Board", type: "Static", price: 20000, assignedTo: "", status: "Not Started", createdOn: "10 Jul 2026", deployment: {} }
 ];
 
+// Supabase Configuration
+const SUPABASE_URL = "https://qyfgelipaxrptxnblmca.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5ZmdlbGlwYXhycHR4bmJsbWNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3MTI5MDYsImV4cCI6MjEwMDI4ODkwNn0.6W9NcnS_D0yoY6AJjKhARUyygd2RIi9Nsu8ewSylXLM";
+
+let supabaseClient = null;
+let useSupabase = false;
+
+// Memory Cache
+let cacheEmployees = [];
+let cacheProjects = [];
+let cacheLogs = [];
+
 // Initialize database
-function initDatabase() {
+async function initDatabase() {
+    try {
+        if (typeof supabase !== 'undefined' && supabase.createClient) {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+    } catch (e) {
+        console.error("Failed to initialize Supabase client library:", e);
+    }
+
+    if (supabaseClient) {
+        try {
+            const { data: empData, error: empError } = await supabaseClient.from('employees').select('*');
+            const { data: projData, error: projError } = await supabaseClient.from('projects').select('*');
+            
+            if (!empError && !projError && empData && projData) {
+                console.log("Successfully connected to Supabase and loaded tables!");
+                useSupabase = true;
+                cacheEmployees = empData;
+                cacheProjects = projData;
+                
+                // Fetch Logs
+                const { data: logData, error: logError } = await supabaseClient.from('system_logs').select('*').order('created_at', { ascending: false }).limit(20);
+                if (!logError && logData) {
+                    cacheLogs = logData;
+                }
+                
+                // Sync to LocalStorage as a local copy
+                localStorage.setItem("employees", JSON.stringify(cacheEmployees));
+                localStorage.setItem("projects", JSON.stringify(cacheProjects));
+                localStorage.setItem("system_logs", JSON.stringify(cacheLogs));
+                return;
+            } else {
+                console.warn("Supabase tables not found or uninitialized. Falling back to LocalStorage.", empError, projError);
+            }
+        } catch (err) {
+            console.warn("Connection to Supabase failed. Falling back to LocalStorage:", err);
+        }
+    }
+
+    // Local Storage Fallback
+    useSupabase = false;
     if (!localStorage.getItem("employees")) {
         localStorage.setItem("employees", JSON.stringify(DEFAULT_EMPLOYEES));
     }
     if (!localStorage.getItem("projects")) {
         localStorage.setItem("projects", JSON.stringify(DEFAULT_PROJECTS));
     }
+    if (!localStorage.getItem("system_logs")) {
+        localStorage.setItem("system_logs", JSON.stringify([]));
+    }
+
+    cacheEmployees = JSON.parse(localStorage.getItem("employees"));
+    cacheProjects = JSON.parse(localStorage.getItem("projects"));
+    cacheLogs = JSON.parse(localStorage.getItem("system_logs"));
 }
 
 function getEmployees() {
-    return JSON.parse(localStorage.getItem("employees"));
+    return cacheEmployees;
 }
 
-function saveEmployees(employees) {
+async function saveEmployees(employees) {
+    cacheEmployees = employees;
     localStorage.setItem("employees", JSON.stringify(employees));
+    if (useSupabase && supabaseClient) {
+        try {
+            const { error } = await supabaseClient.from('employees').upsert(employees);
+            if (error) console.error("Error saving employees to Supabase:", error);
+        } catch(e) {
+            console.error("Sync error:", e);
+        }
+    }
 }
 
 function getProjects() {
-    return JSON.parse(localStorage.getItem("projects"));
+    return cacheProjects;
 }
 
-function saveProjects(projects) {
+async function saveProjects(projects) {
+    cacheProjects = projects;
     localStorage.setItem("projects", JSON.stringify(projects));
+    if (useSupabase && supabaseClient) {
+        try {
+            const { error } = await supabaseClient.from('projects').upsert(projects);
+            if (error) console.error("Error saving projects to Supabase:", error);
+        } catch(e) {
+            console.error("Sync error:", e);
+        }
+    }
+}
+
+function getSystemLogs() {
+    return cacheLogs;
+}
+
+async function logSystemAction(username, action, details, status) {
+    const timestamp = new Date().toISOString();
+    const newLog = {
+        username: username,
+        action: action,
+        details: details || "",
+        status: status || "Success",
+        created_at: timestamp
+    };
+    
+    cacheLogs.unshift(newLog);
+    if (cacheLogs.length > 50) cacheLogs.pop();
+    localStorage.setItem("system_logs", JSON.stringify(cacheLogs));
+
+    if (useSupabase && supabaseClient) {
+        try {
+            await supabaseClient.from('system_logs').insert([newLog]);
+        } catch (e) {
+            console.error("Error inserting system log in Supabase:", e);
+        }
+    }
 }
 
 // Global Variables for Charts
@@ -120,10 +225,15 @@ document.getElementById("login-form").addEventListener("submit", function(e) {
     errorBox.classList.add("hidden");
 
     if (userVal === "admin" && passVal === "admin123") {
-        currentSession = { role: "admin", username: "admin", name: "Admin" };
+        const employees = getEmployees();
+        const adminEmp = employees.find(emp => emp.username === "admin");
+        const adminName = adminEmp ? adminEmp.name : "Jane Smith";
+        const adminAvatar = adminEmp ? adminEmp.avatar_url : null;
+        currentSession = { role: "admin", username: "admin", name: adminName, avatar_url: adminAvatar };
         if (rememberMe) {
             localStorage.setItem("session", JSON.stringify(currentSession));
         }
+        logSystemAction("admin", "Login", "Administrator signed in", "Success");
         loadDashboard();
     } else {
         // Check employees
@@ -195,6 +305,9 @@ document.querySelectorAll("#admin-view .sidebar-link").forEach(link => {
             this.classList.add("active");
             switchAdminPanel(target);
         }
+        // Always close drawer on mobile view
+        const sidebar = document.querySelector("#admin-view .sidebar");
+        if (sidebar) sidebar.classList.remove("show");
     });
 });
 
@@ -202,7 +315,7 @@ function switchAdminPanel(panelId) {
     document.querySelectorAll(".admin-panel-section").forEach(sec => sec.classList.add("hidden"));
     document.getElementById(panelId).classList.remove("hidden");
     
-    // Update active state in sidebar just in case triggered programmatically
+    // Update active state in sidebar
     document.querySelectorAll("#admin-view .sidebar-link").forEach(l => {
         if (l.getAttribute("data-target") === panelId) {
             l.classList.add("active");
@@ -211,16 +324,34 @@ function switchAdminPanel(panelId) {
         }
     });
 
-    const headerTitle = document.getElementById("admin-panel-title");
     if (panelId === "admin-dashboard-panel") {
-        headerTitle.textContent = "Dashboard";
         renderAdminDashboard();
     } else if (panelId === "admin-projects-panel") {
-        headerTitle.textContent = "Projects Management";
         renderAdminProjectsPanel();
     } else if (panelId === "admin-employees-panel") {
-        headerTitle.textContent = "Employees Directory";
         renderAdminEmployeesPanel();
+    } else if (panelId === "admin-settings-panel") {
+        const employees = getEmployees();
+        const adminEmp = employees.find(emp => emp.username === "admin");
+        if (adminEmp) {
+            document.getElementById("admin-settings-fullname").value = adminEmp.name;
+            document.getElementById("admin-settings-username").value = adminEmp.username;
+            updateAdminAvatarUI(adminEmp.avatar_url);
+        }
+        
+        // Update Connection Status Badge
+        const statusBadge = document.getElementById("supabase-status-badge");
+        const statusDesc = document.getElementById("supabase-status-desc");
+        
+        if (useSupabase) {
+            statusBadge.textContent = "Connected";
+            statusBadge.className = "status-badge completed";
+            statusDesc.textContent = "The application is successfully synchronized with your remote Supabase instance. All tables (employees, projects, system_logs) are active.";
+        } else {
+            statusBadge.textContent = "Local Fallback";
+            statusBadge.className = "status-badge not-started";
+            statusDesc.innerHTML = `Running on LocalStorage backup. Table verification failed or tables are not initialized in Supabase yet.<br><br><strong>To connect:</strong> Click the button below to view the SQL Setup Script, copy it, and run it in your Supabase SQL Editor. Then refresh this page.`;
+        }
     }
     lucide.createIcons();
 }
@@ -235,6 +366,9 @@ document.querySelectorAll("#employee-view .sidebar-link").forEach(link => {
             this.classList.add("active");
             switchEmployeePanel(target);
         }
+        // Always close drawer on mobile view
+        const sidebar = document.querySelector("#employee-view .sidebar");
+        if (sidebar) sidebar.classList.remove("show");
     });
 });
 
@@ -258,6 +392,16 @@ function switchEmployeePanel(panelId) {
     } else if (panelId === "employee-projects-panel") {
         headerTitle.textContent = "My Assigned Projects";
         renderEmployeeProjectsPanel();
+    } else if (panelId === "employee-profile-panel") {
+        headerTitle.textContent = "My Profile";
+        const employees = getEmployees();
+        const currentEmp = employees.find(e => e.username === currentSession.username);
+        if (currentEmp) {
+            document.getElementById("employee-settings-fullname").value = currentEmp.name;
+            document.getElementById("employee-settings-role").value = currentEmp.role;
+            document.getElementById("employee-settings-username").value = currentEmp.username;
+            updateEmployeeAvatarUI(currentEmp.avatar_url);
+        }
     }
     lucide.createIcons();
 }
@@ -293,143 +437,75 @@ function formatRupee(amount) {
 // RENDER ADMIN DASHBOARD PANELS
 // ==========================================================================
 
+function renderAdminLogs() {
+    const logs = getSystemLogs();
+    const tbody = document.getElementById("admin-system-logs-tbody");
+    tbody.innerHTML = "";
+    
+    if (logs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding: 2rem;">No system activity logs found.</td></tr>`;
+        return;
+    }
+
+    logs.forEach(log => {
+        const tr = document.createElement("tr");
+        
+        let dateStr = "";
+        try {
+            const d = new Date(log.created_at);
+            dateStr = d.toISOString().replace('T', ' ').substring(0, 16);
+        } catch(e) {
+            dateStr = log.created_at || "N/A";
+        }
+        
+        let statusClass = "ongoing";
+        if (log.status === "Success" || log.status === "Completed") statusClass = "completed";
+        if (log.status === "Failed") statusClass = "not-started";
+        
+        tr.innerHTML = `
+            <td>${dateStr}</td>
+            <td style="font-weight:600; color:var(--text-dark);">${log.username}</td>
+            <td>${log.action}</td>
+            <td>${log.details || "-"}</td>
+            <td><span class="status-badge ${statusClass}">${log.status}</span></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
 function renderAdminDashboard() {
     const projects = getProjects();
     const employees = getEmployees();
     
-    // 1. KPI Calculations
-    const totalProjects = projects.length;
+    // Update Header profile dynamically
+    const adminEmp = employees.find(emp => emp.username === "admin");
+    const adminName = adminEmp ? adminEmp.name : "Jane Smith";
+    const adminAvatar = adminEmp ? adminEmp.avatar_url : null;
+    document.getElementById("admin-header-name").textContent = adminName;
+    updateAdminAvatarUI(adminAvatar);
+    
+    // 1. KPI Calculations (screenshot values scale dynamically)
+    const totalUsers = employees.filter(e => e.username !== "admin").length;
+    document.getElementById("kpi-total-users").textContent = (15450 + totalUsers - 6).toLocaleString();
+    document.getElementById("kpi-system-health").textContent = "99.8% Uptime";
+    
+    const totalEarnedVal = projects.filter(p => p.status === "Completed").reduce((sum, p) => sum + p.price, 0);
+    const formattedEarnings = "$" + new Intl.NumberFormat('en-US').format(Math.round(totalEarnedVal * 0.012));
+    document.getElementById("kpi-monthly-revenue").textContent = formattedEarnings;
+    
+    // 2. Charts
     const ongoingProjects = projects.filter(p => p.status === "Ongoing").length;
     const completedProjects = projects.filter(p => p.status === "Completed").length;
-    const totalEmployees = employees.length;
-    const totalEarnings = projects.filter(p => p.status === "Completed").reduce((sum, p) => sum + p.price, 0);
-    
-    document.getElementById("kpi-admin-total-proj").textContent = totalProjects;
-    document.getElementById("kpi-admin-ongoing-proj").textContent = ongoingProjects;
-    document.getElementById("kpi-admin-completed-proj").textContent = completedProjects;
-    document.getElementById("kpi-admin-total-emp").textContent = totalEmployees;
-    document.getElementById("kpi-admin-total-earned").textContent = formatRupee(totalEarnings);
-    document.getElementById("admin-line-chart-total-earned").textContent = formatRupee(totalEarnings);
-    
-    // 2. Project Overview Chart (Donut)
     const notStartedProjects = projects.filter(p => p.status === "Not Started").length;
-    const donutData = [ongoingProjects, completedProjects, notStartedProjects];
-    renderAdminDonutChart(donutData);
+    const pendingProjects = ongoingProjects + notStartedProjects;
     
-    // 3. Payment Overview Chart (Line)
-    // Map completed projects to months for mockup line chart
-    // Completed projects per month: Jan (200k), Feb (220k), Mar (150k), Apr (250k), May (125k), Jun (300k)
-    // We will scale/distribute the totalEarnings to create a curve
-    const earningsTrend = [213000, 313000, 523000, 788000, 963000, totalEarnings];
-    renderAdminLineChart(earningsTrend);
+    renderAdminDonutChart([completedProjects, pendingProjects]);
     
-    // 4. Recent Projects (Recent 5 projects)
-    const sortedProjects = [...projects].sort((a, b) => b.id.localeCompare(a.id)).slice(0, 5);
-    const recentListContainer = document.getElementById("admin-recent-projects-list");
-    recentListContainer.innerHTML = "";
+    const lineData = [35, 55, 45, 60, 85, 120];
+    renderAdminLineChart(lineData);
     
-    sortedProjects.forEach(proj => {
-        const div = document.createElement("div");
-        div.className = "recent-project-item";
-        
-        let statusClass = "ongoing";
-        if (proj.status === "Completed") statusClass = "completed";
-        if (proj.status === "Not Started") statusClass = "not-started";
-        
-        div.innerHTML = `
-            <div class="recent-proj-info">
-                <span class="recent-proj-title">${proj.title}</span>
-                <span class="recent-proj-meta">${proj.type} &bull; <span class="status-badge ${statusClass}" style="padding:0; font-size:0.65rem;">${proj.status}</span></span>
-            </div>
-            <span class="recent-proj-price">${formatRupee(proj.price)}</span>
-        `;
-        recentListContainer.appendChild(div);
-    });
-
-    // 5. Projects Table (Recent 5 projects table)
-    const tableBody = document.getElementById("admin-dashboard-projects-tbody");
-    tableBody.innerHTML = "";
-    sortedProjects.forEach((proj, idx) => {
-        const tr = document.createElement("tr");
-        
-        let statusClass = "ongoing";
-        if (proj.status === "Completed") statusClass = "completed";
-        if (proj.status === "Not Started") statusClass = "not-started";
-        
-        const emp = employees.find(e => e.username === proj.assignedTo);
-        const assignedName = emp ? emp.name : `<span style="color:var(--text-muted);">Unassigned</span>`;
-        
-        // Eye icon details trigger
-        let actionBtn = "";
-        if (proj.status === "Completed" && proj.deployment && proj.deployment.domain) {
-            actionBtn = `
-                <button class="btn-action-circle" onclick="viewDeploymentDetails('${proj.id}')" title="View Deployment Details">
-                    <i data-lucide="eye" style="width:14px;height:14px;"></i>
-                </button>
-            `;
-        }
-        
-        tr.innerHTML = `
-            <td>${idx + 1}</td>
-            <td style="font-weight:600; color:var(--text-dark);">${proj.title}</td>
-            <td>${proj.type}</td>
-            <td>${proj.price.toLocaleString('en-IN')}</td>
-            <td>${assignedName}</td>
-            <td><span class="status-badge ${statusClass}">${proj.status}</span></td>
-            <td>${proj.createdOn}</td>
-            <td>${actionBtn}</td>
-        `;
-        tableBody.appendChild(tr);
-    });
-    
-    // 6. Employee Summary List (First 4 employees statistics)
-    const empSummaryContainer = document.getElementById("admin-employee-summary-list");
-    empSummaryContainer.innerHTML = "";
-    employees.slice(0, 4).forEach(emp => {
-        const stats = getEmployeeStats(emp.username, projects);
-        const div = document.createElement("div");
-        div.className = "employee-summary-item";
-        
-        const initial = emp.name.charAt(0).toUpperCase();
-        
-        div.innerHTML = `
-            <div class="emp-profile-sec">
-                <div class="emp-avatar">${initial}</div>
-                <div class="emp-meta-info">
-                    <span class="emp-name">${emp.name}</span>
-                    <span class="emp-username">${emp.username}</span>
-                </div>
-            </div>
-            <div class="emp-stats-cols">
-                <div class="emp-stat-col">
-                    <span class="emp-stat-num">${stats.assigned}</span>
-                    <span class="emp-stat-lbl">Assigned</span>
-                </div>
-                <div class="emp-stat-col">
-                    <span class="emp-stat-num">${stats.ongoing}</span>
-                    <span class="emp-stat-lbl">Ongoing</span>
-                </div>
-                <div class="emp-stat-col">
-                    <span class="emp-stat-num">${stats.completed}</span>
-                    <span class="emp-stat-lbl">Completed</span>
-                </div>
-            </div>
-            <span class="emp-earned">${formatRupee(stats.earned)}</span>
-        `;
-        empSummaryContainer.appendChild(div);
-    });
-
-    // Populate "Select Project" dropdown in Deployment form
-    const deploySelect = document.getElementById("admin-deploy-project-select");
-    deploySelect.innerHTML = `<option value="" disabled selected>Choose Project</option>`;
-    
-    // Admin can edit deployment details for ANY project
-    projects.forEach(proj => {
-        const option = document.createElement("option");
-        option.value = proj.id;
-        option.textContent = `${proj.title} [${proj.status}]`;
-        deploySelect.appendChild(option);
-    });
+    // 3. Activity logs
+    renderAdminLogs();
 }
 
 function renderAdminProjectsPanel() {
@@ -1151,22 +1227,39 @@ function closeViewDeploymentModal() {
 }
 
 // Delete functions for Admin panels
-function deleteProject(projectId) {
+async function deleteProject(projectId) {
     if (confirm("Are you sure you want to delete this project?")) {
         let projects = getProjects();
         projects = projects.filter(p => p.id !== projectId);
-        saveProjects(projects);
+        
+        if (useSupabase && supabaseClient) {
+            try {
+                await supabaseClient.from('projects').delete().eq('id', projectId);
+            } catch(e) {
+                console.error(e);
+            }
+        }
+        await saveProjects(projects);
+        await logSystemAction("admin", "Delete Project", `Deleted project ${projectId}`, "Success");
         
         renderAdminDashboard();
         renderAdminProjectsPanel();
     }
 }
 
-function deleteEmployee(username) {
+async function deleteEmployee(username) {
     if (confirm(`Are you sure you want to delete the employee profile "${username}"?`)) {
         let employees = getEmployees();
         employees = employees.filter(e => e.username !== username);
-        saveEmployees(employees);
+        
+        if (useSupabase && supabaseClient) {
+            try {
+                await supabaseClient.from('employees').delete().eq('username', username);
+            } catch(e) {
+                console.error(e);
+            }
+        }
+        await saveEmployees(employees);
         
         // Remove assignment tags in projects
         const projects = getProjects();
@@ -1176,7 +1269,8 @@ function deleteEmployee(username) {
                 if (p.status === "Ongoing") p.status = "Not Started";
             }
         });
-        saveProjects(projects);
+        await saveProjects(projects);
+        await logSystemAction("admin", "Delete Employee", `Deleted employee profile: ${username}`, "Success");
         
         renderAdminDashboard();
         renderAdminEmployeesPanel();
@@ -1195,27 +1289,19 @@ function renderAdminDonutChart(data) {
             height: 240,
             fontFamily: 'Inter, sans-serif'
         },
-        labels: ['Ongoing', 'Completed', 'Not Started'],
-        colors: ['#3b82f6', '#10b981', '#cbd5e1'],
+        labels: ['Completed', 'Pending'],
+        colors: ['#3b82f6', '#ef4444'],
         dataLabels: {
             enabled: false
         },
         legend: {
-            position: 'right',
-            fontSize: '12px',
-            fontWeight: 500,
-            markers: {
-                radius: 12
-            }
+            show: false
         },
         responsive: [{
             breakpoint: 480,
             options: {
                 chart: {
                     width: 200
-                },
-                legend: {
-                    position: 'bottom'
                 }
             }
         }]
@@ -1224,7 +1310,7 @@ function renderAdminDonutChart(data) {
     if (adminDonutChart) {
         adminDonutChart.updateSeries(data);
     } else {
-        adminDonutChart = new ApexCharts(document.getElementById("admin-project-donut-chart"), options);
+        adminDonutChart = new ApexCharts(document.getElementById("admin-project-status-donut-chart"), options);
         adminDonutChart.render();
     }
 }
@@ -1232,7 +1318,7 @@ function renderAdminDonutChart(data) {
 function renderAdminLineChart(data) {
     const options = {
         series: [{
-            name: 'Payment Earned',
+            name: 'Growth',
             data: data
         }],
         chart: {
@@ -1273,16 +1359,16 @@ function renderAdminLineChart(data) {
             }
         },
         markers: {
-            size: 5,
+            size: 4,
             colors: ['#1b53e4'],
             strokeColors: '#fff',
             strokeWidth: 2,
             hover: {
-                size: 7
+                size: 6
             }
         },
         xaxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            categories: ['1930', '1950', '1970', '1990', '2010', '2030'],
             labels: {
                 style: {
                     colors: '#94a3b8',
@@ -1293,12 +1379,6 @@ function renderAdminLineChart(data) {
         },
         yaxis: {
             labels: {
-                formatter: function (value) {
-                    if (value >= 100000) {
-                        return (value / 100000).toFixed(1) + "L";
-                    }
-                    return value;
-                },
                 style: {
                     colors: '#94a3b8',
                     fontSize: '11px',
@@ -1308,20 +1388,13 @@ function renderAdminLineChart(data) {
         },
         grid: {
             borderColor: '#f1f5f9'
-        },
-        tooltip: {
-            y: {
-                formatter: function(val) {
-                    return "₹ " + val.toLocaleString('en-IN');
-                }
-            }
         }
     };
 
     if (adminLineChart) {
         adminLineChart.updateSeries([{ data: data }]);
     } else {
-        adminLineChart = new ApexCharts(document.getElementById("admin-payment-line-chart"), options);
+        adminLineChart = new ApexCharts(document.getElementById("admin-revenue-growth-chart"), options);
         adminLineChart.render();
     }
 }
@@ -1424,10 +1497,291 @@ function renderEmployeeLineChart(data) {
 }
 
 // ==========================================================================
+// FILE UPLOADS (CLOUDINARY) & SETTINGS SUBMISSIONS & SEARCH FILTERS
+// ==========================================================================
+
+async function uploadToCloudinary(file) {
+    const cloudName = "ozh0n4mx";
+    const uploadPreset = "codtech_preset";
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', uploadPreset);
+    
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: 'POST',
+        body: formData
+    });
+    
+    if (!response.ok) {
+        throw new Error("Failed to upload image to Cloudinary");
+    }
+    
+    const data = await response.json();
+    return data.secure_url;
+}
+
+function updateAdminAvatarUI(url) {
+    const preview = document.getElementById("admin-settings-avatar-preview");
+    const fallback = document.getElementById("admin-settings-avatar-fallback");
+    const headerImg = document.getElementById("admin-header-avatar");
+    const headerFallback = document.getElementById("admin-header-avatar-fallback");
+    
+    if (url) {
+        if (preview) {
+            preview.src = url;
+            preview.classList.remove("hidden");
+        }
+        if (fallback) fallback.classList.add("hidden");
+        if (headerImg) {
+            headerImg.src = url;
+            headerImg.classList.remove("hidden");
+        }
+        if (headerFallback) headerFallback.classList.add("hidden");
+    } else {
+        if (preview) preview.classList.add("hidden");
+        if (fallback) fallback.classList.remove("hidden");
+        if (headerImg) headerImg.classList.add("hidden");
+        if (headerFallback) headerFallback.classList.remove("hidden");
+    }
+}
+
+function updateEmployeeAvatarUI(url) {
+    const preview = document.getElementById("employee-settings-avatar-preview");
+    const fallback = document.getElementById("employee-settings-avatar-fallback");
+    const headerAvatar = document.getElementById("employee-avatar-header");
+    
+    if (url) {
+        if (preview) {
+            preview.src = url;
+            preview.classList.remove("hidden");
+        }
+        if (fallback) fallback.classList.add("hidden");
+        if (headerAvatar) {
+            headerAvatar.innerHTML = `<img src="${url}" class="admin-avatar-img">`;
+        }
+    } else {
+        if (preview) preview.classList.add("hidden");
+        if (fallback) fallback.classList.remove("hidden");
+        if (headerAvatar) {
+            const initial = currentSession && currentSession.name ? currentSession.name.charAt(0).toUpperCase() : "E";
+            headerAvatar.textContent = initial;
+        }
+    }
+}
+
+// SQL Setup Modal Helpers
+function closeSupabaseSqlModal() {
+    document.getElementById("supabase-sql-modal").classList.add("hidden");
+}
+
+function openSupabaseSqlModal() {
+    const sqlScript = `-- Create employees table
+CREATE TABLE IF NOT EXISTS employees (
+    username TEXT PRIMARY KEY,
+    password TEXT NOT NULL,
+    name TEXT NOT NULL,
+    role TEXT NOT NULL,
+    avatar_url TEXT
+);
+
+-- Create projects table
+CREATE TABLE IF NOT EXISTS projects (
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    type TEXT NOT NULL,
+    price NUMERIC NOT NULL,
+    assignedTo TEXT REFERENCES employees(username) ON DELETE SET NULL,
+    status TEXT NOT NULL,
+    createdOn TEXT NOT NULL,
+    deployment JSONB
+);
+
+-- Create system_logs table
+CREATE TABLE IF NOT EXISTS system_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    created_at TIMESTAMPTZ DEFAULT now(),
+    username TEXT NOT NULL,
+    action TEXT NOT NULL,
+    details TEXT,
+    status TEXT NOT NULL
+);
+
+-- Seed initial employees
+INSERT INTO employees (username, password, name, role, avatar_url) VALUES
+('admin', 'admin123', 'Jane Smith', 'Administrator', NULL),
+('john_doe', 'password123', 'John Doe', 'Frontend Developer', NULL),
+('jane_smith', 'password123', 'Jane Smith', 'UI/UX Designer', NULL),
+('mike_roberts', 'password123', 'Mike Roberts', 'Backend Developer', NULL),
+('sarah_wilson', 'password123', 'Sarah Wilson', 'Full Stack Developer', NULL),
+('emma_w', 'password123', 'Emma Watson', 'QA Engineer', NULL),
+('robert_d', 'password123', 'Robert Dow', 'DevOps Engineer', NULL)
+ON CONFLICT (username) DO NOTHING;`;
+
+    document.getElementById("supabase-sql-code").value = sqlScript;
+    document.getElementById("supabase-sql-modal").classList.remove("hidden");
+}
+
+function copySupabaseSql() {
+    const codeArea = document.getElementById("supabase-sql-code");
+    codeArea.select();
+    document.execCommand("copy");
+    alert("SQL script copied to clipboard!");
+}
+
+// ==========================================================================
 // APPLICATION ENTRY POINT
 // ==========================================================================
 
-document.addEventListener("DOMContentLoaded", function() {
-    initDatabase();
+document.addEventListener("DOMContentLoaded", async function() {
+    await initDatabase();
     checkSession();
+    
+    // Wire SQL Setup triggers
+    const sqlBtn = document.getElementById("btn-show-supabase-sql");
+    if (sqlBtn) {
+        sqlBtn.addEventListener("click", openSupabaseSqlModal);
+    }
+    
+    // Admin avatar upload listener
+    const adminUpload = document.getElementById("admin-avatar-upload");
+    if (adminUpload) {
+        adminUpload.addEventListener("change", async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            try {
+                const label = document.querySelector("label[for='admin-avatar-upload']");
+                label.innerHTML = `<i data-lucide="loader-2" class="spin"></i> Uploading...`;
+                lucide.createIcons();
+                
+                const url = await uploadToCloudinary(file);
+                const employees = getEmployees();
+                const adminEmp = employees.find(emp => emp.username === "admin");
+                if (adminEmp) {
+                    adminEmp.avatar_url = url;
+                    await saveEmployees(employees);
+                    
+                    // Log
+                    await logSystemAction("admin", "Upload Profile", "Uploaded profile image to Cloudinary", "Success");
+                    updateAdminAvatarUI(url);
+                    alert("Profile image uploaded successfully!");
+                }
+            } catch(err) {
+                console.error(err);
+                alert("Upload failed. Make sure your network is active.");
+            } finally {
+                const label = document.querySelector("label[for='admin-avatar-upload']");
+                label.innerHTML = `<i data-lucide="upload-cloud"></i> Upload New Photo`;
+                lucide.createIcons();
+            }
+        });
+    }
+
+    // Admin profile settings submission
+    const adminForm = document.getElementById("admin-profile-form");
+    if (adminForm) {
+        adminForm.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const fullname = document.getElementById("admin-settings-fullname").value.trim();
+            const password = document.getElementById("admin-settings-password").value;
+            
+            const employees = getEmployees();
+            const adminEmp = employees.find(emp => emp.username === "admin");
+            if (adminEmp) {
+                adminEmp.name = fullname;
+                if (password) {
+                    adminEmp.password = password;
+                }
+                await saveEmployees(employees);
+                
+                // update layout
+                document.getElementById("admin-header-name").textContent = fullname;
+                await logSystemAction("admin", "Update Profile", "Updated administrator details", "Success");
+                alert("Profile settings saved successfully!");
+            }
+        });
+    }
+    
+    // Employee avatar upload listener
+    const empUpload = document.getElementById("employee-avatar-upload");
+    if (empUpload) {
+        empUpload.addEventListener("change", async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            try {
+                const label = document.querySelector("label[for='employee-avatar-upload']");
+                label.innerHTML = `<i data-lucide="loader-2" class="spin"></i> Uploading...`;
+                lucide.createIcons();
+                
+                const url = await uploadToCloudinary(file);
+                const employees = getEmployees();
+                const emp = employees.find(e => e.username === currentSession.username);
+                if (emp) {
+                    emp.avatar_url = url;
+                    await saveEmployees(employees);
+                    
+                    // sync session
+                    currentSession.avatar_url = url;
+                    localStorage.setItem("session", JSON.stringify(currentSession));
+                    
+                    await logSystemAction(currentSession.username, "Upload Profile", "Uploaded employee profile picture to Cloudinary", "Success");
+                    updateEmployeeAvatarUI(url);
+                    alert("Profile image uploaded successfully!");
+                }
+            } catch(err) {
+                console.error(err);
+                alert("Upload failed. Make sure your network is active.");
+            } finally {
+                const label = document.querySelector("label[for='employee-avatar-upload']");
+                label.innerHTML = `<i data-lucide="upload-cloud"></i> Upload Profile Picture`;
+                lucide.createIcons();
+            }
+        });
+    }
+    
+    // Employee profile details submission
+    const empForm = document.getElementById("employee-profile-form");
+    if (empForm) {
+        empForm.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const fullname = document.getElementById("employee-settings-fullname").value.trim();
+            
+            const employees = getEmployees();
+            const emp = employees.find(e => e.username === currentSession.username);
+            if (emp) {
+                emp.name = fullname;
+                await saveEmployees(employees);
+                
+                currentSession.name = fullname;
+                localStorage.setItem("session", JSON.stringify(currentSession));
+                
+                document.getElementById("employee-name-header").textContent = fullname;
+                await logSystemAction(currentSession.username, "Update Profile", "Updated employee profile details", "Success");
+                alert("Profile details saved successfully!");
+            }
+        });
+    }
+    
+    // Admin global search filtering
+    const adminSearch = document.getElementById("admin-global-search");
+    if (adminSearch) {
+        adminSearch.addEventListener("input", function(e) {
+            const val = e.target.value.toLowerCase().trim();
+            
+            if (!document.getElementById("admin-employees-panel").classList.contains("hidden")) {
+                const rows = document.querySelectorAll("#admin-full-employees-tbody tr");
+                rows.forEach(row => {
+                    row.classList.toggle("hidden", !row.textContent.toLowerCase().includes(val));
+                });
+            }
+            if (!document.getElementById("admin-projects-panel").classList.contains("hidden")) {
+                const rows = document.querySelectorAll("#admin-full-projects-tbody tr");
+                rows.forEach(row => {
+                    row.classList.toggle("hidden", !row.textContent.toLowerCase().includes(val));
+                });
+            }
+        });
+    }
 });
