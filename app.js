@@ -703,8 +703,12 @@ function renderAdminEmployeesPanel() {
         const tr = document.createElement("tr");
         const initial = emp.name.charAt(0).toUpperCase();
         
+        const avatarContent = emp.avatar_url 
+            ? `<img src="${emp.avatar_url}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` 
+            : initial;
+        
         tr.innerHTML = `
-            <td><div class="emp-avatar">${initial}</div></td>
+            <td><div class="emp-avatar">${avatarContent}</div></td>
             <td style="font-weight:600; color:var(--text-dark);">${emp.name}</td>
             <td>${emp.username}</td>
             <td>${emp.role}</td>
@@ -1857,17 +1861,22 @@ document.addEventListener("DOMContentLoaded", async function() {
         empForm.addEventListener("submit", async function(e) {
             e.preventDefault();
             const fullname = document.getElementById("employee-settings-fullname").value.trim();
+            const password = document.getElementById("employee-settings-password").value;
             
             const employees = getEmployees();
             const emp = employees.find(e => e.username === currentSession.username);
             if (emp) {
                 emp.name = fullname;
+                if (password) {
+                    emp.password = password;
+                }
                 await saveEmployees(employees);
                 
                 currentSession.name = fullname;
                 localStorage.setItem("session", JSON.stringify(currentSession));
                 
                 document.getElementById("employee-name-header").textContent = fullname;
+                document.getElementById("employee-settings-password").value = "";
                 await logSystemAction(currentSession.username, "Update Profile", "Updated employee profile details", "Success");
                 alert("Profile details saved successfully!");
             }

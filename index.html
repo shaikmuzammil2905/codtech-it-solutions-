@@ -472,7 +472,7 @@
                     </div>
                     
                     <!-- Supabase Connection Status Card -->
-                    <div class="card-widget-new">
+                    <div class="card-widget-new" style="display: none !important;">
                         <div class="card-widget-header-new">
                             <span class="card-widget-title-new">Database Integration Status</span>
                         </div>
@@ -803,6 +803,51 @@
                                         <!-- Rendered dynamically -->
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= PANEL 3: EMPLOYEE PROFILE PANEL ================= -->
+                <div id="employee-profile-panel" class="employee-panel-section hidden animated-fade">
+                    <div class="card-widget-new">
+                        <div class="card-widget-header-new">
+                            <span class="card-widget-title-new">Employee Profile Settings</span>
+                        </div>
+                        <div class="card-widget-body-new">
+                            <div class="profile-settings-container">
+                                <div class="profile-avatar-upload-section">
+                                    <div class="avatar-preview-container">
+                                        <img src="" alt="Employee Profile Picture" id="employee-settings-avatar-preview" class="settings-avatar-img hidden">
+                                        <div class="avatar-circle employee large" id="employee-settings-avatar-fallback">E</div>
+                                    </div>
+                                    <div class="upload-controls">
+                                        <label for="employee-avatar-upload" class="btn-primary employee-btn">
+                                            <i data-lucide="upload-cloud"></i> Upload New Photo
+                                        </label>
+                                        <input type="file" id="employee-avatar-upload" accept="image/*" class="hidden">
+                                        <span class="upload-hint">Unsigned upload directly to Cloudinary</span>
+                                    </div>
+                                </div>
+                                <form id="employee-profile-form" class="settings-form">
+                                    <div class="form-control-wrapper">
+                                        <label for="employee-settings-fullname">Full Name</label>
+                                        <input type="text" id="employee-settings-fullname" class="form-input" placeholder="Your full name" required>
+                                    </div>
+                                    <div class="form-control-wrapper">
+                                        <label for="employee-settings-role">Job Role / Title (Read Only)</label>
+                                        <input type="text" id="employee-settings-role" class="form-input" readonly>
+                                    </div>
+                                    <div class="form-control-wrapper">
+                                        <label for="employee-settings-username">Username (Read Only)</label>
+                                        <input type="text" id="employee-settings-username" class="form-input" readonly>
+                                    </div>
+                                    <div class="form-control-wrapper">
+                                        <label for="employee-settings-password">Change Password</label>
+                                        <input type="password" id="employee-settings-password" class="form-input" placeholder="Enter new password to update">
+                                    </div>
+                                    <button type="submit" class="btn-primary employee-btn" style="margin-top:1rem; width:auto;">Save Settings</button>
+                                </form>
                             </div>
                         </div>
                     </div>
