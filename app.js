@@ -330,6 +330,10 @@ function switchAdminPanel(panelId) {
     document.querySelectorAll(".admin-panel-section").forEach(sec => sec.classList.add("hidden"));
     document.getElementById(panelId).classList.remove("hidden");
     
+    // Close sidebar on mobile view
+    const sidebar = document.querySelector("#admin-view .sidebar");
+    if (sidebar) sidebar.classList.remove("show");
+    
     // Update active state in sidebar
     document.querySelectorAll("#admin-view .sidebar-link").forEach(l => {
         if (l.getAttribute("data-target") === panelId) {
@@ -390,6 +394,10 @@ document.querySelectorAll("#employee-view .sidebar-link").forEach(link => {
 function switchEmployeePanel(panelId) {
     document.querySelectorAll(".employee-panel-section").forEach(sec => sec.classList.add("hidden"));
     document.getElementById(panelId).classList.remove("hidden");
+
+    // Close sidebar on mobile view
+    const sidebar = document.querySelector("#employee-view .sidebar");
+    if (sidebar) sidebar.classList.remove("show");
 
     // Update active states
     document.querySelectorAll("#employee-view .sidebar-link").forEach(l => {

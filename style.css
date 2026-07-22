@@ -491,7 +491,7 @@ a {
 .toggle-sidebar-btn {
     background: none;
     color: var(--text-medium);
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     font-size: 1.25rem;
@@ -1254,6 +1254,9 @@ textarea.form-input {
 }
 
 @media (max-width: 768px) {
+    .toggle-sidebar-btn {
+        display: flex;
+    }
     .sidebar {
         position: fixed;
         left: -260px;
