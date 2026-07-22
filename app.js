@@ -55,9 +55,27 @@ const DEFAULT_PROJECTS = [
     { id: "p27", title: "Internal Wiki Board", type: "Static", price: 20000, assignedTo: "", status: "Not Started", createdOn: "10 Jul 2026", deployment: {} }
 ];
 
-// Supabase Configuration
-const SUPABASE_URL = "https://qyfgelipaxrptxnblmca.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5ZmdlbGlwYXhycHR4bmJsbWNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3MTI5MDYsImV4cCI6MjEwMDI4ODkwNn0.6W9NcnS_D0yoY6AJjKhARUyygd2RIi9Nsu8ewSylXLM";
+// Supabase & Cloudinary Configuration
+let SUPABASE_URL = "https://qyfgelipaxrptxnblmca.supabase.co";
+let SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5ZmdlbGlwYXhycHR4bmJsbWNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3MTI5MDYsImV4cCI6MjEwMDI4ODkwNn0.6W9NcnS_D0yoY6AJjKhARUyygd2RIi9Nsu8ewSylXLM";
+let CLOUDINARY_CLOUD_NAME = "ozh0n4mx";
+let CLOUDINARY_UPLOAD_PRESET = "codtech_preset";
+
+async function fetchEnvConfig() {
+    try {
+        const response = await fetch('/api/config');
+        if (response.ok) {
+            const data = await response.json();
+            if (data.SUPABASE_URL) SUPABASE_URL = data.SUPABASE_URL;
+            if (data.SUPABASE_ANON_KEY) SUPABASE_ANON_KEY = data.SUPABASE_ANON_KEY;
+            if (data.CLOUDINARY_CLOUD_NAME) CLOUDINARY_CLOUD_NAME = data.CLOUDINARY_CLOUD_NAME;
+            if (data.CLOUDINARY_UPLOAD_PRESET) CLOUDINARY_UPLOAD_PRESET = data.CLOUDINARY_UPLOAD_PRESET;
+            console.log("Loaded environment configurations dynamically from API server.");
+        }
+    } catch(e) {
+        console.warn("Could not load dynamic server config. Using hardcoded credential fallback.");
+    }
+}
 
 let supabaseClient = null;
 let useSupabase = false;
@@ -1530,8 +1548,8 @@ function renderEmployeeLineChart(data) {
 // ==========================================================================
 
 async function uploadToCloudinary(file) {
-    const cloudName = "ozh0n4mx";
-    const uploadPreset = "codtech_preset";
+    const cloudName = CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = CLOUDINARY_UPLOAD_PRESET;
     
     const formData = new FormData();
     formData.append('file', file);
@@ -1694,6 +1712,7 @@ function copySupabaseSql() {
 // ==========================================================================
 
 document.addEventListener("DOMContentLoaded", async function() {
+    await fetchEnvConfig();
     await initDatabase();
     checkSession();
     
