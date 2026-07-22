@@ -1548,6 +1548,10 @@ textarea.form-input {
     line-height: 1.6;
 }
 
+#btn-show-supabase-sql {
+    align-self: flex-start;
+}
+
 /* Copy panel block styling */
 .sql-code-container {
     background: #0f172a;
@@ -1590,6 +1594,7 @@ textarea.form-input {
         gap: 0.5rem;
     }
     #btn-show-supabase-sql {
+        align-self: stretch;
         width: 100%;
     }
 }
