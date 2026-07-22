@@ -1369,7 +1369,12 @@ function renderAdminDonutChart(data) {
         chart: {
             type: 'donut',
             height: 240,
-            fontFamily: 'Inter, sans-serif'
+            fontFamily: 'Inter, sans-serif',
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800
+            }
         },
         labels: ['Completed', 'Pending'],
         colors: ['#3b82f6', '#ef4444'],
@@ -1390,17 +1395,21 @@ function renderAdminDonutChart(data) {
     };
 
     if (adminDonutChart) {
-        adminDonutChart.updateSeries(data);
-    } else {
-        adminDonutChart = new ApexCharts(document.getElementById("admin-project-status-donut-chart"), options);
-        adminDonutChart.render();
+        try {
+            adminDonutChart.destroy();
+        } catch (e) {
+            console.error("Error destroying adminDonutChart:", e);
+        }
     }
+    
+    adminDonutChart = new ApexCharts(document.getElementById("admin-project-status-donut-chart"), options);
+    adminDonutChart.render();
 }
 
 function renderAdminLineChart(data) {
     const options = {
         series: [{
-            name: 'Growth',
+            name: 'Revenue',
             data: data
         }],
         chart: {
@@ -1409,7 +1418,12 @@ function renderAdminLineChart(data) {
             toolbar: {
                 show: false
             },
-            fontFamily: 'Inter, sans-serif'
+            fontFamily: 'Inter, sans-serif',
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800
+            }
         },
         dataLabels: {
             enabled: false
@@ -1450,7 +1464,7 @@ function renderAdminLineChart(data) {
             }
         },
         xaxis: {
-            categories: ['1930', '1950', '1970', '1990', '2010', '2030'],
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
             labels: {
                 style: {
                     colors: '#94a3b8',
@@ -1461,10 +1475,21 @@ function renderAdminLineChart(data) {
         },
         yaxis: {
             labels: {
+                formatter: function (value) {
+                    return "$" + value + "K";
+                },
                 style: {
                     colors: '#94a3b8',
                     fontSize: '11px',
                     fontWeight: 500
+                }
+            }
+        },
+        tooltip: {
+            theme: 'dark',
+            y: {
+                formatter: function (val) {
+                    return "$" + val.toLocaleString('en-US') + ",000";
                 }
             }
         },
@@ -1474,11 +1499,15 @@ function renderAdminLineChart(data) {
     };
 
     if (adminLineChart) {
-        adminLineChart.updateSeries([{ data: data }]);
-    } else {
-        adminLineChart = new ApexCharts(document.getElementById("admin-revenue-growth-chart"), options);
-        adminLineChart.render();
+        try {
+            adminLineChart.destroy();
+        } catch (e) {
+            console.error("Error destroying adminLineChart:", e);
+        }
     }
+    
+    adminLineChart = new ApexCharts(document.getElementById("admin-revenue-growth-chart"), options);
+    adminLineChart.render();
 }
 
 function renderEmployeeLineChart(data) {
@@ -1571,11 +1600,15 @@ function renderEmployeeLineChart(data) {
     };
 
     if (employeeLineChart) {
-        employeeLineChart.updateSeries([{ data: data }]);
-    } else {
-        employeeLineChart = new ApexCharts(document.getElementById("employee-earnings-line-chart"), options);
-        employeeLineChart.render();
+        try {
+            employeeLineChart.destroy();
+        } catch (e) {
+            console.error("Error destroying employeeLineChart:", e);
+        }
     }
+    
+    employeeLineChart = new ApexCharts(document.getElementById("employee-earnings-line-chart"), options);
+    employeeLineChart.render();
 }
 
 // ==========================================================================
