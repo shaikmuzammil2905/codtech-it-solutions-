@@ -1571,7 +1571,6 @@ textarea.form-input {
     }
 }
 
-/* Mobile responsive fixes */
 @media (max-width: 768px) {
     .profile-settings-container {
         grid-template-columns: 1fr;
@@ -1581,6 +1580,17 @@ textarea.form-input {
         border-bottom: 1px solid #f1f5f9;
         padding-right: 0;
         padding-bottom: 2rem;
+    }
+    .card-widget-body-new {
+        padding: 1.25rem;
+    }
+    .status-indicator-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    #btn-show-supabase-sql {
+        width: 100%;
     }
 }
 
