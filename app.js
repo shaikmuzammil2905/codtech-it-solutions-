@@ -1616,7 +1616,42 @@ INSERT INTO employees (username, password, name, role, avatar_url) VALUES
 ('sarah_wilson', 'password123', 'Sarah Wilson', 'Full Stack Developer', NULL),
 ('emma_w', 'password123', 'Emma Watson', 'QA Engineer', NULL),
 ('robert_d', 'password123', 'Robert Dow', 'DevOps Engineer', NULL)
-ON CONFLICT (username) DO NOTHING;`;
+ON CONFLICT (username) DO NOTHING;
+
+-- Seed initial projects
+INSERT INTO projects (id, title, type, price, assignedTo, status, createdOn, deployment) VALUES
+('p1', 'E-Commerce Website', 'Dynamic', 45000, 'john_doe', 'Ongoing', '18 Jun 2026', '{}'),
+('p2', 'Travel Booking Website', 'Dynamic', 60000, 'john_doe', 'Ongoing', '01 Jun 2026', '{}'),
+('p3', 'Corporate Portal', 'Dynamic', 150000, 'john_doe', 'Completed', '12 May 2026', '{"domain": "corporate.codtech.com", "hosting": "hostinger.com", "server": "104.21.43.12", "github": "https://github.com/john-codtech/corp-portal", "credentials": "Admin: admin_user\\\\nPass: c0dp@ss123"}'),
+('p4', 'E-Commerce Admin Panel', 'Dynamic', 150000, 'john_doe', 'Completed', '10 Apr 2026', '{"domain": "admin.shoptech.com", "hosting": "aws.amazon.com", "server": "EC2 Instance - 54.210.12.8", "github": "https://github.com/john-codtech/shop-admin", "credentials": "SSH Key deployed."}'),
+('p5', 'Mobile Banking App', 'App', 90000, 'john_doe', 'Ongoing', '05 Jul 2026', '{}'),
+('p6', 'HTML5 Game Module', 'Static', 20000, 'john_doe', 'Completed', '20 Mar 2026', '{"domain": "play.codtech.com", "hosting": "netlify.app", "server": "Netlify Edge CDN", "github": "https://github.com/john-codtech/html5-game", "credentials": "Auto-deploy active."}'),
+('p7', 'School Management System', 'Multiple Dynamic', 30000, 'jane_smith', 'Ongoing', '16 Jun 2026', '{}'),
+('p8', 'Fitness Tracker App', 'App', 100000, 'jane_smith', 'Completed', '05 May 2026', '{"domain": "fitlife.app", "hosting": "digitalocean.com", "server": "Droplet IP: 159.203.11.23", "github": "https://github.com/jane-codtech/fit-tracker", "credentials": "DB Pass: fitdb_secure99"}'),
+('p9', 'Corporate Website', 'Static', 25000, 'jane_smith', 'Completed', '20 Apr 2026', '{"domain": "heavyindustries.com", "hosting": "hostinger.com", "server": "Hostinger Shared", "github": "https://github.com/jane-codtech/heavy-corp", "credentials": "FTP: ftp.heavyindustries.com"}'),
+('p10', 'E-Learning App Interface', 'Dynamic', 90000, 'jane_smith', 'Completed', '15 Mar 2026', '{"domain": "learnonline.edu", "hosting": "vercel.app", "server": "Vercel serverless", "github": "https://github.com/jane-codtech/elearning-ui", "credentials": "Vercel integrated."}'),
+('p11', 'Agency Portfolio', 'Static', 20000, 'jane_smith', 'Ongoing', '10 Jul 2026', '{}'),
+('p12', 'Portfolio Website', 'Static', 15000, 'mike_roberts', 'Completed', '10 Jun 2026', '{"domain": "mikeport.dev", "hosting": "github.io", "server": "GitHub Pages", "github": "https://github.com/mike-codtech/portfolio", "credentials": "None needed."}'),
+('p13', 'API Gateway', 'Dynamic', 65000, 'mike_roberts', 'Completed', '15 May 2026', '{"domain": "api.codtech.com", "hosting": "aws.amazon.com", "server": "AWS API Gateway", "github": "https://github.com/mike-codtech/api-gateway", "credentials": "IAM Policy configured."}'),
+('p14', 'Chat Application Backend', 'Dynamic', 50000, 'mike_roberts', 'Completed', '28 Apr 2026', '{"domain": "chat-api.codtech.com", "hosting": "heroku.com", "server": "Heroku Dyno", "github": "https://github.com/mike-codtech/chat-back", "credentials": "Config vars set in Heroku."}'),
+('p15', 'HR Portal Database', 'Multiple Dynamic', 50000, 'mike_roberts', 'Completed', '12 Mar 2026', '{"domain": "hrdb.codtech.com", "hosting": "digitalocean.com", "server": "Managed Postgres", "github": "https://github.com/mike-codtech/hr-db", "credentials": "DB Admin User."}'),
+('p16', 'E-Commerce Payment Gateway', 'Dynamic', 70000, 'mike_roberts', 'Ongoing', '12 Jul 2026', '{}'),
+('p17', 'Food Delivery App', 'App', 75000, 'sarah_wilson', 'Completed', '05 Jun 2026', '{"domain": "foodrun.delivery", "hosting": "aws.amazon.com", "server": "ECS Fargate", "github": "https://github.com/sarah-codtech/food-run", "credentials": "AWS Console Access Code."}'),
+('p18', 'Video Streaming Portal', 'App', 125000, 'sarah_wilson', 'Completed', '01 May 2026', '{"domain": "streamy.tv", "hosting": "aws.amazon.com", "server": "S3 + CloudFront + EC2", "github": "https://github.com/sarah-codtech/streamy", "credentials": "Root ssh key."}'),
+('p19', 'Task Manager Dashboard', 'Dynamic', 50000, 'sarah_wilson', 'Completed', '18 Apr 2026', '{"domain": "taskflow.com", "hosting": "firebase.google.com", "server": "Firebase Hosting", "github": "https://github.com/sarah-codtech/taskflow", "credentials": "Firebase console."}'),
+('p20', 'Real Estate Directory', 'Dynamic', 80000, 'sarah_wilson', 'Ongoing', '28 Jun 2026', '{}'),
+('p21', 'Social Dashboard', 'Dynamic', 60000, 'sarah_wilson', 'Ongoing', '03 Jul 2026', '{}'),
+('p22', 'QA Testing Automation Framework', 'Dynamic', 180000, 'emma_w', 'Completed', '14 Feb 2026', '{"domain": "qa-reports.codtech.com", "hosting": "aws.amazon.com", "server": "EC2 Jenkins Server", "github": "https://github.com/emma-codtech/qa-automation", "credentials": "Jenkins login credentials."}'),
+('p23', 'Cloud Kubernetes Setup', 'Dynamic', 100000, 'robert_d', 'Completed', '20 Jan 2026', '{"domain": "k8s.codtech.com", "hosting": "aws.amazon.com", "server": "EKS Cluster", "github": "https://github.com/robert-codtech/k8s-infra", "credentials": "kubeconfig file generated."}'),
+('p24', 'AI Search Integrations', 'Dynamic', 120000, NULL, 'Not Started', '19 Jul 2026', '{}'),
+('p25', 'Hotel Reservation system', 'Multiple Dynamic', 85000, NULL, 'Not Started', '18 Jul 2026', '{}'),
+('p26', 'Cryptocurrency Widget', 'Static', 15000, NULL, 'Not Started', '15 Jul 2026', '{}'),
+('p27', 'Internal Wiki Board', 'Static', 20000, NULL, 'Not Started', '10 Jul 2026', '{}')
+ON CONFLICT (id) DO NOTHING;`;
+
+    document.getElementById("supabase-sql-code").value = sqlScript;
+    document.getElementById("supabase-sql-modal").classList.remove("hidden");
+}
 
     document.getElementById("supabase-sql-code").value = sqlScript;
     document.getElementById("supabase-sql-modal").classList.remove("hidden");
